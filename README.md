@@ -1,38 +1,40 @@
-# BlueArchive-SDDM-theme
+# 🔹 Blue Archive SDDM Theme
 
 ![Stars](https://img.shields.io/github/stars/RhythmGC/BlueArchive-SDDM-theme?color=5d8aa8&labelColor=1b1b25&style=for-the-badge)
 ![Forks](https://img.shields.io/github/forks/RhythmGC/BlueArchive-SDDM-theme?color=bf616a&labelColor=1b1b25&style=for-the-badge)
 
-**BlueArchive-SDDM-theme** is a modern, high-quality, and highly customizable series of themes for the [SDDM](https://github.com/sddm/sddm/) display manager. Designed and maintained by **[RhythmGC](https://github.com/RhythmGC)**, it features premium Qt6 visuals, virtual keyboard support, and an automated script that dynamically downloads and applies animated video/image backgrounds from `source.json`.
+> **Welcome back, Sensei! Access your Schale Terminal in Kivotos with style.** 
+
+**BlueArchive-SDDM-theme** is a modern, premium, and highly customizable SDDM login interface themed after the popular game **Blue Archive**. Designed and developed by **[RhythmGC](https://github.com/RhythmGC)**, it transforms your standard Linux display manager into an operating Schale terminal, welcoming you with animated live background videos and static illustrations of your beloved students (e.g., Yuuka Hayase). All student database references and media assets are managed dynamically using `source.json`.
 
 ---
 
 ## 🚀 Key Features
 
-*   **Beautiful Animations:** Native support for high-definition video backgrounds (`.mp4`, `.webm`) and static fallback images.
-*   **Dynamic Theme Installer (`setup.sh`):** An interactive installer that reads configured themes from `source.json` and manages everything automatically.
-*   **Virtual Keyboard Integration:** Fully supported virtual keyboard for touchscreen or accessibility use.
-*   **Lightweight & Modern:** Developed using the latest **Qt6** standards for optimal performance.
+*   🌸 **Live Student Animations:** Native support for high-definition student videos (L2D, animated backgrounds, `.mp4`, `.webm`) and static illustrations.
+*   📂 **Schale Dynamic Installer (`setup.sh`):** An interactive assistant script that parses students configured in `source.json`, downloads their L2D assets, and configures the login environment automatically.
+*   🎹 **Arona Assist (Virtual Keyboard):** Integrated virtual keyboard for touchscreen support and ease of access.
+*   ⚡ **Kivotos Core Engine:** Powered by Qt6 and SDDM >= 0.21.0 for rapid, lightweight, and modern performance.
 
 ---
 
 ## 📦 Requirements & Dependencies
 
-Before installation, ensure you have the required Qt6 libraries. The installer script can automatically fetch these for you on supported package managers.
+Before boot-up, ensure your system has the following Qt6 libraries. The installer script can automatically fetch these for you on supported package managers.
 
 *   `sddm >= 0.21.0`
 *   `qt6-svg`
 *   `qt6-virtualkeyboard`
-*   `qt6-multimedia` (and `qt6-multimedia-ffmpeg` for video playback)
-*   `jq` & `curl` (for reading configurations and downloading assets)
+*   `qt6-multimedia` (and `qt6-multimedia-ffmpeg` for video backgrounds)
+*   `jq` & `curl` (for parsing student configurations and downloading media assets)
 
 ---
 
 ## 🛠️ Installation
 
-### Option 1: Automatic Interactive Installer (Recommended)
+### Option 1: Automatic Schale Terminal Installer (Recommended)
 
-Simply clone this repository locally, move into the directory, and run the automated installer:
+Simply clone this repository locally, navigate into the directory, and boot the installer:
 
 ```bash
 git clone https://github.com/RhythmGC/BlueArchive-SDDM-theme.git
@@ -42,18 +44,18 @@ chmod +x setup.sh
 ```
 
 #### Installer Menu Options:
-1.  **🚀 Complete Installation (recommended):** Installs all dependencies, prompts you to select your preferred theme, automatically downloads its background media, sets up configurations, and enables SDDM.
+1.  **🚀 Complete Installation (recommended):** Installs all dependencies, prompts you to select your preferred student theme, automatically downloads her background animations, configures the environment, and enables SDDM.
 2.  **📦 Install Dependencies:** Automatically installs Qt6 packages, `jq`, and `curl` using your system package manager.
-3.  **📥 Download Media:** Choose a specific theme to download its video/image background files and configure it.
-4.  **📂 Install Theme:** Copies theme assets to system directories and configures SDDM.
-5.  **🎨 Select Theme Variant:** Interactively choose which configuration variant to use.
-6.  **✨ Preview the set theme:** Tests the selected SDDM screen without logging out.
+3.  **📥 Download Media:** Select a specific student to download her video/image assets and configure her `.conf`.
+4.  **📂 Install Theme:** Copies the theme assets to system directories and sets the current SDDM theme.
+5.  **🎨 Select Theme Variant:** Choose which student profile config to apply to the login screen.
+6.  **✨ Preview the set theme:** Tests the selected login screen without logging out.
 
 ---
 
-### Option 2: Manual Installation
+### Option 2: Manual Deployment
 
-1.  **Install dependencies** on your distribution:
+1.  **Install dependencies** on your Linux distribution:
     ```bash
     # Arch Linux
     sudo pacman -S sddm qt6-svg qt6-virtualkeyboard qt6-multimedia-ffmpeg jq curl
@@ -61,7 +63,7 @@ chmod +x setup.sh
     # Fedora
     sudo dnf install -y sddm qt6-qtsvg qt6-qtvirtualkeyboard qt6-qtmultimedia jq curl
     ```
-2.  **Clone the repository** to SDDM themes directory:
+2.  **Clone the repository** to the SDDM themes folder:
     ```bash
     sudo git clone https://github.com/RhythmGC/BlueArchive-SDDM-theme.git /usr/share/sddm/themes/BlueArchive-SDDM-theme
     ```
@@ -70,7 +72,7 @@ chmod +x setup.sh
     sudo cp -r /usr/share/sddm/themes/BlueArchive-SDDM-theme/Fonts/* /usr/share/fonts/
     ```
 4.  **Set as Current Theme:**
-    Edit `/etc/sddm.conf` to use `BlueArchive-SDDM-theme`:
+    Edit `/etc/sddm.conf` to set the theme:
     ```ini
     [Theme]
     Current=BlueArchive-SDDM-theme
@@ -84,12 +86,12 @@ chmod +x setup.sh
 
 ---
 
-## ⚙️ Customizing Themes with `source.json`
+## ⚙️ Enrolling Students in the Database (`source.json`)
 
-You can easily add new characters, themes, or custom background elements by editing the local `source.json` file in the root directory.
+You can easily enroll new students or customize existing background animations by configuring the local `source.json` database.
 
 ### 1. Structure of `source.json`
-Add a new JSON object for your theme with the direct URLs to the background video and thumbnail/fallback image:
+Add a new JSON entry using the student's name as the key, alongside direct URLs to their animated background and fallback image:
 
 ```json
 {
@@ -97,28 +99,28 @@ Add a new JSON object for your theme with the direct URLs to the background vide
         "video": "https://res.cloudinary.com/.../Yuuka_d8qnc0.mp4",
         "image": "https://res.cloudinary.com/.../GTA5An8bUAAsHLp_zg6ptz.jpg"
     },
-    "your_custom_theme": {
-        "video": "https://your-domain.com/background.mp4",
-        "image": "https://your-domain.com/fallback.jpg"
+    "another_student": {
+        "video": "https://domain.com/live2d-animation.mp4",
+        "image": "https://domain.com/static-artwork.jpg"
     }
 }
 ```
 
-### 2. Tải về và cấu hình (Apply)
-*   Run the script: `./setup.sh`
+### 2. Download & Apply Assets
+*   Run the installer: `./setup.sh`
 *   Select **🎨 Select Theme Variant** or **📥 Download Media**.
-*   Select your custom theme name from the interactive UI.
+*   Select the newly enrolled student from the interactive UI.
 *   The script will automatically:
     1.  Create `Backgrounds/images/` and `Backgrounds/videos/` folders if they do not exist.
-    2.  Download files to `Backgrounds/images/your_custom_theme.jpg` and `Backgrounds/videos/your_custom_theme.mp4`.
-    3.  Generate or update `Themes/your_custom_theme.conf` with the correct relative paths.
+    2.  Download media files to `Backgrounds/images/another_student.jpg` and `Backgrounds/videos/another_student.mp4`.
+    3.  Generate or update `Themes/another_student.conf` with the correct relative paths (by copying `yuuka_hayase.conf` as a template).
     4.  Copy files to system theme directories.
 
 ---
 
-## 🎨 Theme Preview
+## 🎨 Schale Terminal Preview
 
-You can preview your selected theme live without signing out by running:
+You can preview your selected student theme live without signing out by running:
 ```bash
 sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/BlueArchive-SDDM-theme/
 ```
@@ -126,7 +128,7 @@ sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/BlueArchive-SDDM-the
 
 ---
 
-## 🌟 Stargazers
+## 🌟 Kivotos Supporters (Stargazers)
 
 <!-- stargazers_start -->
 <p align="left">
@@ -134,7 +136,7 @@ sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/BlueArchive-SDDM-the
 </p>
 <!-- stargazers_end -->
 
-## 🍴 Forkers
+## 🍴 Club Members (Forkers)
 
 <!-- forks_start -->
 <p align="left">No stargazers or forkers yet. Be the first!</p>
