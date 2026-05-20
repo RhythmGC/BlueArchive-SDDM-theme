@@ -126,6 +126,18 @@ sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/BlueArchive-SDDM-the
 
 ---
 
+## 🌟 Stargazers
+
+<!-- stargazers_start -->
+<p align="left">No stargazers or forkers yet. Be the first!</p>
+<!-- stargazers_end -->
+
+## 🍴 Forkers
+
+<!-- forks_start -->
+<p align="left">No stargazers or forkers yet. Be the first!</p>
+<!-- forks_end -->
+
 ## 📝 License & Copyright
 
 *   Distributed under the **[GPLv3+](https://www.gnu.org/licenses/gpl-3.0.html) License**.
