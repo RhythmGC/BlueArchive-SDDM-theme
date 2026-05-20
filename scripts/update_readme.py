@@ -2,6 +2,7 @@ import os
 import re
 import urllib.request
 import json
+import time
 
 def fetch_data(url):
     req = urllib.request.Request(url)
@@ -24,7 +25,6 @@ def generate_avatar_grid(users):
         return "<p align=\"left\">No stargazers or forkers yet. Be the first!</p>"
     
     html = "<p align=\"left\">\n"
-    # We display up to 40 avatars
     for user in users[:40]:
         username = user.get("login")
         avatar_url = user.get("avatar_url")
@@ -52,13 +52,26 @@ def main():
     with open(readme_path, "r", encoding="utf-8") as f:
         content = f.read()
         
-    # Replace stargazers
+    # Replace stargazers grid
     stargazers_pattern = r"(<!-- stargazers_start -->)(.*?)(<!-- stargazers_end -->)"
     content = re.sub(stargazers_pattern, f"\\1\n{stargazers_html}\n\\3", content, flags=re.DOTALL)
     
-    # Replace forks
+    # Replace forks grid
     forks_pattern = r"(<!-- forks_start -->)(.*?)(<!-- forks_end -->)"
     content = re.sub(forks_pattern, f"\\1\n{forkers_html}\n\\3", content, flags=re.DOTALL)
+    
+    # Force refresh shields.io badges by appending/updating a timestamp cache-buster
+    timestamp = int(time.time())
+    content = re.sub(
+        r"(https://img\.shields\.io/github/stars/RhythmGC/BlueArchive-SDDM-theme\?color=5d8aa8&labelColor=1b1b25&style=for-the-badge)(?:&t=\d+)?",
+        rf"\1&t={timestamp}",
+        content
+    )
+    content = re.sub(
+        r"(https://img\.shields\.io/github/forks/RhythmGC/BlueArchive-SDDM-theme\?color=bf616a&labelColor=1b1b25&style=for-the-badge)(?:&t=\d+)?",
+        rf"\1&t={timestamp}",
+        content
+    )
     
     # Write back
     with open(readme_path, "w", encoding="utf-8") as f:
