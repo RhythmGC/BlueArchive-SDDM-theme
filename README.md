@@ -129,7 +129,9 @@ sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/BlueArchive-SDDM-the
 ## 🌟 Stargazers
 
 <!-- stargazers_start -->
-<p align="left">No stargazers or forkers yet. Be the first!</p>
+<p align="left">
+  <a href="https://github.com/RhythmGC"><img src="https://avatars.githubusercontent.com/u/125289048?v=4" width="40" height="40" style="border-radius: 50%; margin: 3px;" alt="RhythmGC"/></a>
+</p>
 <!-- stargazers_end -->
 
 ## 🍴 Forkers
