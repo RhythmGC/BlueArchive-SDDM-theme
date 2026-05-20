@@ -2,7 +2,7 @@ name: Update Stargazers and Forkers in README
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # Run every 6 hours
+    - cron: '0 * * * *' # Run every 1 hour
   watch:
     types: [started]
   fork:
