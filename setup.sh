@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## SDDM Astronaut Theme Installer
+## SDDM Blue Archive Theme Installer
 ## Based on original by RhythmGC https://github.com/RhythmGC/BlueArchive-SDDM-theme
 ## Copyright (C) 2026 RhythmGC
 
@@ -125,7 +125,7 @@ install_deps() {
 download_media() {
     local theme="${1:-}"
     if [[ -z "$theme" ]]; then
-        theme=$(choose "${THEMES[@]}" || echo "astronaut")
+        theme=$(choose "${THEMES[@]}" || echo "yuuka_hayase")
     fi
     
     local json_file="$SCRIPT_DIR/source.json"
@@ -214,7 +214,7 @@ install_theme() {
 select_theme() {
     [[ ! -f "$METADATA" ]] && { error "Install theme first"; return 1; }
     
-    local theme=$(choose "${THEMES[@]}" || echo "astronaut")
+    local theme=$(choose "${THEMES[@]}" || echo "yuuka_hayase")
     
     download_media "$theme"
     
@@ -265,9 +265,9 @@ main() {
     clear
     while true; do
         if command -v gum &>/dev/null; then
-            gum style --bold --padding "0 2" --border double --border-foreground 12 "🚀 SDDM Astronaut Theme Installer"
+            gum style --bold --padding "0 2" --border double --border-foreground 12 "🚀 Blue Archive SDDM Theme Installer"
         else
-            echo -e "\e[36m🚀 SDDM Astronaut Theme Installer\e[0m"
+            echo -e "\e[36m🚀 Blue Archive SDDM Theme Installer\e[0m"
         fi
 
         local choice=$(choose \
