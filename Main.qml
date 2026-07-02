@@ -119,12 +119,12 @@ Pane {
         Rectangle {
             id: welcomeCard
             
+            anchors.centerIn: parent
+
             // Starts centered, then morphs to targetLoginForm position/size
             width: !isUnlocked ? Math.min(parent.width * 0.38, 560) : (parent.width * 0.65)
             height: !isUnlocked ? Math.min(parent.height * 0.52, 480) : (parent.height * 0.82)
             
-            x: (parent.width - width) / 2
-            y: (parent.height - height) / 2
             radius: !isUnlocked ? 20 : 16
             
             z: 1
@@ -132,8 +132,6 @@ Pane {
             // Smooth animations for morphing!
             Behavior on width  { NumberAnimation { duration: 600; easing.type: Easing.InOutQuart } }
             Behavior on height { NumberAnimation { duration: 600; easing.type: Easing.InOutQuart } }
-            Behavior on x      { NumberAnimation { duration: 600; easing.type: Easing.InOutQuart } }
-            Behavior on y      { NumberAnimation { duration: 600; easing.type: Easing.InOutQuart } }
             Behavior on radius { NumberAnimation { duration: 600; easing.type: Easing.InOutQuart } }
 
             // Frosted glass background
