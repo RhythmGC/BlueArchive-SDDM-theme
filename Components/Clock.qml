@@ -54,6 +54,87 @@ Item {
             anchors.right: parent.right; anchors.bottom: parent.bottom
         }
 
+        // ── Cybernetic Rotating Ring (behind the time text) ──────────────
+        Rectangle {
+            id: clockHalo
+            width: Math.min(parent.width, parent.height) * 0.76
+            height: width
+            anchors.centerIn: parent
+            color: "transparent"
+            border.color: "#1238BDF8" // very faint glowing blue
+            border.width: 1.5
+            radius: width / 2
+
+            // Inner circle
+            Rectangle {
+                width: parent.width * 0.8
+                height: width
+                anchors.centerIn: parent
+                color: "transparent"
+                border.color: "#0838BDF8"
+                border.width: 1
+                radius: width / 2
+            }
+
+            RotationAnimator {
+                target: clockHalo
+                from: 0
+                to: 360
+                duration: 25000
+                loops: Animation.Infinite
+                running: true
+            }
+        }
+
+        // ── Corner Diagnostic Indicators ─────────────────────────────────
+        Label {
+            text: "SYS_STATUS: ACTIVE"
+            font.family: root.mainFontFamily
+            font.pointSize: root.font.pointSize * 0.52
+            font.bold: true
+            color: "#38BDF8"
+            opacity: 0.4
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.margins: 12
+        }
+        
+        Label {
+            text: "LOG_SECURE: OK"
+            font.family: root.mainFontFamily
+            font.pointSize: root.font.pointSize * 0.52
+            font.bold: true
+            color: "#38BDF8"
+            opacity: 0.4
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.margins: 12
+        }
+
+        Label {
+            text: "SHALE_OS_v1.3"
+            font.family: root.mainFontFamily
+            font.pointSize: root.font.pointSize * 0.52
+            font.bold: true
+            color: "#38BDF8"
+            opacity: 0.4
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            anchors.margins: 12
+        }
+
+        Label {
+            text: "SYS_NET: SECURED"
+            font.family: root.mainFontFamily
+            font.pointSize: root.font.pointSize * 0.52
+            font.bold: true
+            color: "#38BDF8"
+            opacity: 0.4
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.margins: 12
+        }
+
         ColumnLayout {
             anchors.fill: parent
             anchors.margins: 12
