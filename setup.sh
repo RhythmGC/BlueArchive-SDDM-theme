@@ -184,12 +184,16 @@ download_media() {
     fi
 }
 
-# Install theme
+# Install theme (with theme selection built-in)
 install_theme() {
     local src="$SCRIPT_DIR"
     local dst="$THEMES_DIR/$THEME_NAME"
 
     [[ ! -d "$src" ]] && { error "Run this script from the theme directory"; return 1; }
+
+    # --- Pick theme variant BEFORE installing ---
+    info "Choose a theme variant to install:"
+    local selected_theme=$(choose "${THEMES[@]}" || echo "yuuka_hayase")
 
     # Backup and copy
     [[ -d "$dst" ]] && sudo mv "$dst" "${dst}_$DATE"
@@ -201,13 +205,37 @@ install_theme() {
 
     # Configure SDDM
     echo "[Theme]
-    Current=$THEME_NAME" | sudo tee /etc/sddm.conf >/dev/null
+    Current=$THEME_NAME" | sudo tee /etc/sddm.conf > /dev/null
 
     sudo mkdir -p /etc/sddm.conf.d
     echo "[General]
-    InputMethod=qtvirtualkeyboard" | sudo tee /etc/sddm.conf.d/virtualkbd.conf >/dev/null
+    InputMethod=qtvirtualkeyboard" | sudo tee /etc/sddm.conf.d/virtualkbd.conf > /dev/null
 
     info "Theme installed"
+
+    # Download media and set selected theme
+    download_media "$selected_theme"
+    sudo sed -i "s|^ConfigFile=.*|ConfigFile=Themes/${selected_theme}.conf|" "$METADATA"
+    info "Active theme set to: $selected_theme"
+}
+
+# Update theme files only (no backup, no reinstall — just sync changes)
+update_theme() {
+    local src="$SCRIPT_DIR"
+    local dst="$THEMES_DIR/$THEME_NAME"
+
+    [[ ! -d "$dst" ]] && { error "Theme not installed yet. Please run Install Theme first."; return 1; }
+
+    spin "Updating theme files..." sudo cp -r "$src"/* "$dst"/
+    info "Theme files updated ✅"
+
+    # Ask if user wants to switch theme variant too
+    if confirm "Switch theme variant as well?"; then
+        local selected_theme=$(choose "${THEMES[@]}" || echo "yuuka_hayase")
+        download_media "$selected_theme"
+        sudo sed -i "s|^ConfigFile=.*|ConfigFile=Themes/${selected_theme}.conf|" "$METADATA"
+        info "Active theme set to: $selected_theme"
+    fi
 }
 
 # Select theme variant
@@ -274,17 +302,19 @@ main() {
             "🚀 Complete Installation (recommended)" \
             "📦 Install Dependencies" \
             "📥 Download Media" \
-            "📂 Install Theme" \
+            "📂 Install Theme (choose variant)" \
+            "🔄 Update Theme Files (quick sync)" \
             "🔧 Enable SDDM Service" \
             "🎨 Select Theme Variant" \
             "✨ Preview the set theme" \
             "❌ Exit")
 
         case "$choice" in
-            "🚀 Complete Installation (recommended)") install_deps && install_theme && select_theme && enable_sddm && info "Everything done!" && exit 0;;
+            "🚀 Complete Installation (recommended)") install_deps && install_theme && enable_sddm && info "Everything done!" && exit 0;;
             "📦 Install Dependencies") install_deps ;;
             "📥 Download Media") download_media ;;
-            "📂 Install Theme") install_theme ;;
+            "📂 Install Theme (choose variant)") install_theme ;;
+            "🔄 Update Theme Files (quick sync)") update_theme ;;
             "🔧 Enable SDDM Service") enable_sddm ;;
             "🎨 Select Theme Variant") select_theme ;;
             "✨ Preview the set theme") preview_theme;;
