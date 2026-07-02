@@ -153,21 +153,47 @@ download_media() {
     if [[ ! -f "$conf_file" && -f "$SCRIPT_DIR/Themes/yuuka_hayase.conf" ]]; then
         cp "$SCRIPT_DIR/Themes/yuuka_hayase.conf" "$conf_file"
     fi
+
+    # Helper function to download using curl, bypass Pixiv 403
+    download_file() {
+        local url="$1"
+        local out="$2"
+        local extra_opts=()
+        if [[ "$url" == *"pximg.net"* ]]; then
+            extra_opts=(-H "Referer: https://www.pixiv.net/")
+        fi
+        curl -L -f -s "${extra_opts[@]}" "$url" -o "$out"
+    }
     
+    # If the video URL is actually a static image file, treat it as image only
+    local is_video_static=false
+    if [[ "$video_url" =~ \.(jpg|jpeg|png|webp|gif)$ ]]; then
+        is_video_static=true
+        if [[ -z "$image_url" ]]; then
+            image_url="$video_url"
+        fi
+        video_url=""
+    fi
+
     if [[ -n "$video_url" ]]; then
         local video_file="$vid_dir/${theme}.mp4"
         if [[ ! -f "$video_file" ]]; then
-            spin "Downloading video for $theme..." curl -L -s "$video_url" -o "$video_file"
+            spin "Downloading video for $theme..." download_file "$video_url" "$video_file"
         fi
         if [[ -f "$conf_file" ]]; then
             sed -i "s|^Background=.*|Background=\"Backgrounds/videos/${theme}.mp4\"|" "$conf_file"
+        fi
+    else
+        # If no video is present, disable video background in config
+        if [[ -f "$conf_file" ]]; then
+            sed -i "s|^Background=.*|Background=\"Backgrounds/images/${theme}.jpg\"|" "$conf_file"
         fi
     fi
     
     if [[ -n "$image_url" ]]; then
         local image_file="$img_dir/${theme}.jpg"
         if [[ ! -f "$image_file" ]]; then
-            spin "Downloading image for $theme..." curl -L -s "$image_url" -o "$image_file"
+            spin "Downloading image for $theme..." download_file "$image_url" "$image_file"
         fi
         if [[ -f "$conf_file" ]]; then
             sed -i "s|^BackgroundPlaceholder=.*|BackgroundPlaceholder=\"Backgrounds/images/${theme}.jpg\"|" "$conf_file"
