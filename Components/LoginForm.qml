@@ -116,7 +116,7 @@ RowLayout {
         Input {
             id: input
             Layout.fillWidth: true
-            Layout.preferredHeight: parent.height * 0.65
+            Layout.preferredHeight: root.font.pointSize * 13.5
         }
 
         // Session Desktop Selector

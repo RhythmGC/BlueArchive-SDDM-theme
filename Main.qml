@@ -123,7 +123,7 @@ Pane {
 
             // Starts centered, then morphs to targetLoginForm position/size
             width: !isUnlocked ? Math.min(parent.width * 0.38, 560) : (parent.width * 0.65)
-            height: !isUnlocked ? Math.min(parent.height * 0.52, 480) : (parent.height * 0.82)
+            height: !isUnlocked ? Math.min(parent.height * 0.52, 480) : (parent.height * 0.68)
             
             radius: !isUnlocked ? 20 : 16
             
