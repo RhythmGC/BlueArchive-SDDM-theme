@@ -64,10 +64,19 @@ Pane {
     focus: true
 
     Keys.onPressed: function(event) {
-        if (config.ShowWelcomeScreen == "true" && !isUnlocked) {
-            isUnlocked = true;
-            formRevealTimer.start();
-            event.accepted = true;
+        if (config.ShowWelcomeScreen == "true") {
+            if (!isUnlocked) {
+                isUnlocked = true;
+                formRevealTimer.start();
+                event.accepted = true;
+            } else if (event.key === Qt.Key_Escape) {
+                // Collapse card back to welcome screen on Escape press
+                isUnlocked = false;
+                formReady = false;
+                formRevealTimer.stop();
+                root.forceActiveFocus();
+                event.accepted = true;
+            }
         }
     }
 
