@@ -36,6 +36,19 @@ Pane {
     property string clockFontFamily: orbitron.name
 
     property bool isUnlocked: (config.ShowWelcomeScreen !== "true")
+    // formReady is set true after card-expand animation finishes
+    property bool formReady: (config.ShowWelcomeScreen !== "true")
+
+    // Timer fires after card expand animation (600 ms) to reveal the login form
+    Timer {
+        id: formRevealTimer
+        interval: 620
+        repeat: false
+        onTriggered: {
+            formReady = true;
+            form.focusPassword();
+        }
+    }
 
     LayoutMirroring.enabled: config.RightToLeftLayout == "true" ? true : Qt.application.layoutDirection === Qt.RightToLeft
     LayoutMirroring.childrenInherit: true
@@ -47,18 +60,19 @@ Pane {
 
     font.family: (config.Font && config.Font !== "pixelon") ? config.Font : openSansRegular.name
     font.pointSize: config.FontSize !== "" ? config.FontSize : parseInt(height / 80) || 13
-    
+
     focus: true
 
     Keys.onPressed: function(event) {
         if (config.ShowWelcomeScreen == "true" && !isUnlocked) {
             isUnlocked = true;
+            formRevealTimer.start();
             event.accepted = true;
         }
     }
 
     onIsUnlockedChanged: {
-        if (isUnlocked) {
+        if (isUnlocked && config.ShowWelcomeScreen !== "true") {
             form.focusPassword();
         }
     }
@@ -164,13 +178,13 @@ Pane {
             anchors.verticalCenter: parent.verticalCenter
             z: 1
 
-            // Dynamic opacity and scale
-            opacity: isUnlocked ? 1.0 : 0.0
-            scale: isUnlocked ? 1.0 : 0.85
+            // Dynamic opacity and scale — waits for card expand to finish
+            opacity: formReady ? 1.0 : 0.0
+            scale: formReady ? 1.0 : 0.88
             visible: opacity > 0.0
-            
-            Behavior on opacity { NumberAnimation { duration: 500; easing.type: Easing.OutQuad } }
-            Behavior on scale { NumberAnimation { duration: 500; easing.type: Easing.OutBack } }
+
+            Behavior on opacity { NumberAnimation { duration: 450; easing.type: Easing.OutQuad } }
+            Behavior on scale   { NumberAnimation { duration: 450; easing.type: Easing.OutBack } }
         }
 
         // Fullscreen lock MouseArea to capture clicks
@@ -181,99 +195,98 @@ Pane {
             enabled: !isUnlocked
             onClicked: {
                 isUnlocked = true;
+                formRevealTimer.start();
             }
         }
 
-        // Beautiful SCHALE Welcome Lock Screen Overlay
+        // ── Welcome Lock Screen Overlay ──────────────────────────────────
         Item {
             id: welcomeOverlay
             anchors.fill: parent
-            z: 9 // sits above the background but below form
-            visible: (config.ShowWelcomeScreen == "true" && welcomeOpacity > 0.0)
+            z: 9
+            visible: config.ShowWelcomeScreen == "true" && !formReady
 
-            property real welcomeOpacity: isUnlocked ? 0.0 : 1.0
-            opacity: welcomeOpacity
-            scale: isUnlocked ? 1.05 : 1.0
-
-            Behavior on opacity { NumberAnimation { duration: 400; easing.type: Easing.OutQuad } }
-            Behavior on scale { NumberAnimation { duration: 400; easing.type: Easing.OutQuad } }
-
-            // A beautiful cybernetic halo in the center
+            // ── Expanding blur backdrop ──────────────────────────────────
+            // Starts as a small rounded card, expands to fill the screen
             Rectangle {
-                id: haloRing
-                width: parent.height * 0.30
-                height: width
+                id: welcomeCard
                 anchors.centerIn: parent
-                anchors.verticalCenterOffset: -parent.height * 0.05
-                color: "transparent"
-                border.color: "#4000A3EC"
-                border.width: 2
-                radius: width / 2
 
-                // Slow rotation animation
-                RotationAnimator {
-                    target: haloRing
-                    from: 0
-                    to: 360
-                    duration: 25000
-                    loops: Animation.Infinite
-                    running: config.ShowWelcomeScreen == "true" && !isUnlocked
-                }
-                
-                // Outer dotted ring
-                Rectangle {
-                    width: parent.width + 12
-                    height: width
+                // Animate from small card → fullscreen
+                width:  isUnlocked ? parent.width  : Math.min(parent.width  * 0.38, 560)
+                height: isUnlocked ? parent.height : Math.min(parent.height * 0.52, 480)
+                radius: isUnlocked ? 0 : 20
+
+                Behavior on width  { NumberAnimation { duration: 600; easing.type: Easing.InOutQuart } }
+                Behavior on height { NumberAnimation { duration: 600; easing.type: Easing.InOutQuart } }
+                Behavior on radius { NumberAnimation { duration: 600; easing.type: Easing.InOutQuart } }
+
+                // Frosted glass background
+                color: "#CC0A0F1E"
+
+                // Subtle cyan border (fades away on expand)
+                border.color: isUnlocked ? "#0000A3EC" : "#8000A3EC"
+                border.width: 1.5
+                Behavior on border.color { ColorAnimation { duration: 400 } }
+
+                // Corner accents (top-left)
+                Rectangle { width: 14; height: 2; color: "#00A3EC"; opacity: isUnlocked ? 0 : 1; Behavior on opacity { NumberAnimation { duration: 300 } }; anchors.left: parent.left; anchors.top: parent.top; anchors.leftMargin: 1 }
+                Rectangle { width: 2; height: 14; color: "#00A3EC"; opacity: isUnlocked ? 0 : 1; Behavior on opacity { NumberAnimation { duration: 300 } }; anchors.left: parent.left; anchors.top: parent.top; anchors.topMargin: 1 }
+                // Corner accents (top-right)
+                Rectangle { width: 14; height: 2; color: "#00A3EC"; opacity: isUnlocked ? 0 : 1; Behavior on opacity { NumberAnimation { duration: 300 } }; anchors.right: parent.right; anchors.top: parent.top; anchors.rightMargin: 1 }
+                Rectangle { width: 2; height: 14; color: "#00A3EC"; opacity: isUnlocked ? 0 : 1; Behavior on opacity { NumberAnimation { duration: 300 } }; anchors.right: parent.right; anchors.top: parent.top; anchors.topMargin: 1 }
+                // Corner accents (bottom-left)
+                Rectangle { width: 14; height: 2; color: "#00A3EC"; opacity: isUnlocked ? 0 : 1; Behavior on opacity { NumberAnimation { duration: 300 } }; anchors.left: parent.left; anchors.bottom: parent.bottom; anchors.leftMargin: 1 }
+                Rectangle { width: 2; height: 14; color: "#00A3EC"; opacity: isUnlocked ? 0 : 1; Behavior on opacity { NumberAnimation { duration: 300 } }; anchors.left: parent.left; anchors.bottom: parent.bottom; anchors.bottomMargin: 1 }
+                // Corner accents (bottom-right)
+                Rectangle { width: 14; height: 2; color: "#00A3EC"; opacity: isUnlocked ? 0 : 1; Behavior on opacity { NumberAnimation { duration: 300 } }; anchors.right: parent.right; anchors.bottom: parent.bottom; anchors.rightMargin: 1 }
+                Rectangle { width: 2; height: 14; color: "#00A3EC"; opacity: isUnlocked ? 0 : 1; Behavior on opacity { NumberAnimation { duration: 300 } }; anchors.right: parent.right; anchors.bottom: parent.bottom; anchors.bottomMargin: 1 }
+
+                // ── Content inside the card ──────────────────────────────
+                Column {
                     anchors.centerIn: parent
-                    color: "transparent"
-                    border.color: "#1F00A3EC"
-                    border.width: 1
-                    radius: width / 2
-                }
-            }
+                    spacing: welcomeCard.height * 0.05
 
-            // Stationary Schale Logo in the center of the ring
-            Image {
-                id: schaleLogoWelcome
-                source: Qt.resolvedUrl("Assets/logo/Schale_logo_emblem.png")
-                width: haloRing.width * 0.75
-                height: width
-                fillMode: Image.PreserveAspectFit
-                anchors.centerIn: haloRing
-                mipmap: true
-            }
+                    // Fade content out when expanding
+                    opacity: isUnlocked ? 0.0 : 1.0
+                    Behavior on opacity { NumberAnimation { duration: 250; easing.type: Easing.OutQuad } }
 
-            // Pulsing welcome text container
-            ColumnLayout {
-                anchors.top: haloRing.bottom
-                anchors.topMargin: parent.height * 0.04
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: 12
-                
-                // Slow pulsing opacity for the text
-                SequentialAnimation on opacity {
-                    loops: Animation.Infinite
-                    running: config.ShowWelcomeScreen == "true" && !isUnlocked
-                    NumberAnimation { from: 0.4; to: 1.0; duration: 1500; easing.type: Easing.InOutQuad }
-                    NumberAnimation { from: 1.0; to: 0.4; duration: 1500; easing.type: Easing.InOutQuad }
-                }
+                    // Schale logo
+                    Image {
+                        id: schaleLogoWelcome
+                        source: Qt.resolvedUrl("Assets/logo/Schale_logo_emblem.png")
+                        width:  welcomeCard.width * 0.38
+                        height: width
+                        fillMode: Image.PreserveAspectFit
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        mipmap: true
+                    }
 
-                // Custom OS image logo instead of text
-                Image {
-                    source: Qt.resolvedUrl("Assets/logo/BlueArchiveOS-Linux_sharp.png")
-                    Layout.preferredWidth: parent.width * 0.38
-                    Layout.preferredHeight: Layout.preferredWidth * 0.3125
-                    fillMode: Image.PreserveAspectFit
-                    Layout.alignment: Qt.AlignHCenter
-                    mipmap: true
-                }
+                    // OS name logo
+                    Image {
+                        source: Qt.resolvedUrl("Assets/logo/BlueArchiveOS-Linux_sharp.png")
+                        width:  welcomeCard.width * 0.72
+                        height: width * 0.3125
+                        fillMode: Image.PreserveAspectFit
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        mipmap: true
+                    }
 
-                Label {
-                    text: "SYSTEM SECURE // PRESS ANY KEY OR CLICK TO AUTHORIZE"
-                    font.family: root.mainFontFamily
-                    font.pointSize: root.font.pointSize * 0.8
-                    color: "#81C7F5"
-                    Layout.alignment: Qt.AlignHCenter
+                    // Pulsing "Press any key" hint
+                    Label {
+                        text: "PRESS ANY KEY OR CLICK TO AUTHORIZE"
+                        font.family: root.mainFontFamily
+                        font.pointSize: root.font.pointSize * 0.72
+                        color: "#81C7F5"
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        SequentialAnimation on opacity {
+                            loops: Animation.Infinite
+                            running: !isUnlocked
+                            NumberAnimation { from: 0.3; to: 1.0; duration: 1200; easing.type: Easing.InOutQuad }
+                            NumberAnimation { from: 1.0; to: 0.3; duration: 1200; easing.type: Easing.InOutQuad }
+                        }
+                    }
                 }
             }
         }
