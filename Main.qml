@@ -18,6 +18,25 @@ Pane {
     width: config.ScreenWidth || Screen.ScreenWidth
     padding: config.ScreenPadding
 
+    FontLoader {
+        id: openSansRegular
+        source: Qt.resolvedUrl("Fonts/OpenSans/OpenSans-Regular.ttf")
+    }
+    FontLoader {
+        id: openSansBold
+        source: Qt.resolvedUrl("Fonts/OpenSans/OpenSans-Bold.ttf")
+    }
+    FontLoader {
+        id: orbitron
+        source: Qt.resolvedUrl("Fonts/Orbitron Black.ttf")
+    }
+
+    property string mainFontFamily: openSansRegular.name
+    property string boldFontFamily: openSansBold.name
+    property string clockFontFamily: orbitron.name
+
+    property bool isUnlocked: (config.ShowWelcomeScreen !== "true")
+
     LayoutMirroring.enabled: config.RightToLeftLayout == "true" ? true : Qt.application.layoutDirection === Qt.RightToLeft
     LayoutMirroring.childrenInherit: true
 
@@ -26,10 +45,23 @@ Pane {
     palette.highlightedText: config.HighlightTextColor
     palette.buttonText: config.HoverSystemButtonsIconsColor
 
-    font.family: config.Font
+    font.family: (config.Font && config.Font !== "pixelon") ? config.Font : openSansRegular.name
     font.pointSize: config.FontSize !== "" ? config.FontSize : parseInt(height / 80) || 13
     
     focus: true
+
+    Keys.onPressed: function(event) {
+        if (config.ShowWelcomeScreen == "true" && !isUnlocked) {
+            isUnlocked = true;
+            event.accepted = true;
+        }
+    }
+
+    onIsUnlockedChanged: {
+        if (isUnlocked) {
+            form.focusPassword();
+        }
+    }
 
     property bool leftleft: config.HaveFormBackground == "true" &&
                             config.PartialBlur == "false" &&
@@ -76,20 +108,174 @@ Pane {
             anchors.centerIn: form
             z: 1
 
-            color: config.FormBackgroundColor
-            visible: config.HaveFormBackground == "true" ? true : false
-            opacity: config.PartialBlur == "true" ? 0.3 : 1
+            color: config.FormBackgroundColor || "#121625"
+            visible: form.visible
+            opacity: form.opacity * (config.PartialBlur == "true" ? 0.85 : 0.95)
+            scale: form.scale
+            radius: 16
+            border.color: "#5900A3EC"
+            border.width: 1.5
+
+            // Small high-tech corner decorations
+            Rectangle {
+                width: 12; height: 2; color: "#00A3EC"
+                anchors.left: parent.left; anchors.top: parent.top
+            }
+            Rectangle {
+                width: 2; height: 12; color: "#00A3EC"
+                anchors.left: parent.left; anchors.top: parent.top
+            }
+            Rectangle {
+                width: 12; height: 2; color: "#00A3EC"
+                anchors.right: parent.right; anchors.top: parent.top
+            }
+            Rectangle {
+                width: 2; height: 12; color: "#00A3EC"
+                anchors.right: parent.right; anchors.top: parent.top
+            }
+            Rectangle {
+                width: 12; height: 2; color: "#00A3EC"
+                anchors.left: parent.left; anchors.bottom: parent.bottom
+            }
+            Rectangle {
+                width: 2; height: 12; color: "#00A3EC"
+                anchors.left: parent.left; anchors.bottom: parent.bottom
+            }
+            Rectangle {
+                width: 12; height: 2; color: "#00A3EC"
+                anchors.right: parent.right; anchors.bottom: parent.bottom
+            }
+            Rectangle {
+                width: 2; height: 12; color: "#00A3EC"
+                anchors.right: parent.right; anchors.bottom: parent.bottom
+            }
         }
 
         LoginForm {
             id: form
 
-            height: parent.height
-            width: parent.width / 2.5
+            height: parent.height * 0.82
+            width: parent.width / 3.2
             anchors.left: config.FormPosition == "left" ? parent.left : undefined
             anchors.horizontalCenter: config.FormPosition == "center" ? parent.horizontalCenter : undefined
             anchors.right: config.FormPosition == "right" ? parent.right : undefined
+            anchors.leftMargin: config.FormPosition == "left" ? parent.width * 0.05 : 0
+            anchors.rightMargin: config.FormPosition == "right" ? parent.width * 0.05 : 0
+            anchors.verticalCenter: parent.verticalCenter
             z: 1
+
+            // Dynamic opacity and scale
+            opacity: isUnlocked ? 1.0 : 0.0
+            scale: isUnlocked ? 1.0 : 0.85
+            visible: opacity > 0.0
+            
+            Behavior on opacity { NumberAnimation { duration: 500; easing.type: Easing.OutQuad } }
+            Behavior on scale { NumberAnimation { duration: 500; easing.type: Easing.OutBack } }
+        }
+
+        // Fullscreen lock MouseArea to capture clicks
+        MouseArea {
+            id: lockScreenMouseArea
+            anchors.fill: parent
+            z: 10 // high z-index to block other inputs when locked
+            enabled: !isUnlocked
+            onClicked: {
+                isUnlocked = true;
+            }
+        }
+
+        // Beautiful SCHALE Welcome Lock Screen Overlay
+        Item {
+            id: welcomeOverlay
+            anchors.fill: parent
+            z: 9 // sits above the background but below form
+            visible: (config.ShowWelcomeScreen == "true" && welcomeOpacity > 0.0)
+
+            property real welcomeOpacity: isUnlocked ? 0.0 : 1.0
+            opacity: welcomeOpacity
+            scale: isUnlocked ? 1.05 : 1.0
+
+            Behavior on opacity { NumberAnimation { duration: 400; easing.type: Easing.OutQuad } }
+            Behavior on scale { NumberAnimation { duration: 400; easing.type: Easing.OutQuad } }
+
+            // A beautiful cybernetic halo in the center
+            Rectangle {
+                id: haloRing
+                width: parent.height * 0.30
+                height: width
+                anchors.centerIn: parent
+                anchors.verticalCenterOffset: -parent.height * 0.05
+                color: "transparent"
+                border.color: "#4000A3EC"
+                border.width: 2
+                radius: width / 2
+
+                // Slow rotation animation
+                RotationAnimator {
+                    target: haloRing
+                    from: 0
+                    to: 360
+                    duration: 25000
+                    loops: Animation.Infinite
+                    running: config.ShowWelcomeScreen == "true" && !isUnlocked
+                }
+                
+                // Outer dotted ring
+                Rectangle {
+                    width: parent.width + 12
+                    height: width
+                    anchors.centerIn: parent
+                    color: "transparent"
+                    border.color: "#1F00A3EC"
+                    border.width: 1
+                    radius: width / 2
+                }
+            }
+
+            // Stationary Schale Logo in the center of the ring
+            Image {
+                id: schaleLogoWelcome
+                source: Qt.resolvedUrl("Assets/logo/Schale_logo_emblem.png")
+                width: haloRing.width * 0.55
+                height: width
+                fillMode: Image.PreserveAspectFit
+                anchors.centerIn: haloRing
+                mipmap: true
+            }
+
+            // Pulsing welcome text container
+            ColumnLayout {
+                anchors.top: haloRing.bottom
+                anchors.topMargin: parent.height * 0.04
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: 12
+                
+                // Slow pulsing opacity for the text
+                SequentialAnimation on opacity {
+                    loops: Animation.Infinite
+                    running: config.ShowWelcomeScreen == "true" && !isUnlocked
+                    NumberAnimation { from: 0.4; to: 1.0; duration: 1500; easing.type: Easing.InOutQuad }
+                    NumberAnimation { from: 1.0; to: 0.4; duration: 1500; easing.type: Easing.InOutQuad }
+                }
+
+                // Custom OS image logo instead of text
+                Image {
+                    source: Qt.resolvedUrl("Assets/logo/BlueArchiveOS-Linux_sharp.png")
+                    Layout.preferredWidth: parent.width * 0.38
+                    Layout.preferredHeight: Layout.preferredWidth * 0.3125
+                    fillMode: Image.PreserveAspectFit
+                    Layout.alignment: Qt.AlignHCenter
+                    mipmap: true
+                }
+
+                Label {
+                    text: "SYSTEM SECURE // PRESS ANY KEY OR CLICK TO AUTHORIZE"
+                    font.family: root.mainFontFamily
+                    font.pointSize: root.font.pointSize * 0.8
+                    color: "#81C7F5"
+                    Layout.alignment: Qt.AlignHCenter
+                }
+            }
         }
 
         Loader {
@@ -269,20 +455,19 @@ Pane {
             id: blur
             
             height: parent.height
+            width: (config.ShowWelcomeScreen == "true" || config.FullBlur == "true") ? parent.width : form.width
+            anchors.centerIn: (config.ShowWelcomeScreen == "true" || config.FullBlur == "true") ? backgroundImage : form
 
-            // width: config.FullBlur == "true" ? parent.width : form.width
-            // anchors.centerIn: config.FullBlur == "true" ? parent : form
-
-            // This solves problem when FullBlur and HaveFormBackground is set to true but PartialBlur is false and FormPosition isn't center.
-            width: (config.FullBlur == "true" && config.PartialBlur == "false" && config.FormPosition != "center" ) ? parent.width - formBackground.width : config.FullBlur == "true" ? parent.width : form.width 
-            anchors.centerIn: config.FullBlur == "true" ? backgroundImage : form
-
-            source: config.FullBlur == "true" ? backgroundImage : blurMask
+            source: (config.ShowWelcomeScreen == "true" || config.FullBlur == "true") ? backgroundImage : blurMask
             blurEnabled: true
             autoPaddingEnabled: false
-            blur: config.Blur == "" ? 2.0 : config.Blur
+            
+            // Dynamic blur animation
+            blur: (config.ShowWelcomeScreen == "true" && !isUnlocked) ? 0.0 : (config.Blur == "" ? 2.5 : config.Blur)
             blurMax: config.BlurMax == "" ? 48 : config.BlurMax
-            visible: config.FullBlur == "true" || config.PartialBlur == "true" ? true : false
+            visible: config.FullBlur == "true" || config.PartialBlur == "true" || config.ShowWelcomeScreen == "true"
+
+            Behavior on blur { NumberAnimation { duration: 600; easing.type: Easing.OutQuad } }
         }
     }
 }

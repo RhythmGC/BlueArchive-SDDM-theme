@@ -6,15 +6,20 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 
 Item {
+    id: virtualKeyboardButtonItem
+
+    height: root.font.pointSize * 2.2
+    width: parent.width * 0.8
+    anchors.horizontalCenter: parent.horizontalCenter
+
     Button {
         id: virtualKeyboardButton
-
-        anchors.horizontalCenter: parent.horizontalCenter
-        z: 1
+        anchors.fill: parent
 
         visible: virtualKeyboard.status == Loader.Ready && config.HideVirtualKeyboard == "false"
         checkable: true
         onClicked: virtualKeyboard.switchState()
+        hoverEnabled: true
         
         Keys.onReturnPressed: {
             toggle();
@@ -27,45 +32,26 @@ Item {
 
         contentItem: Text {
             id: virtualKeyboardButtonText
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
 
-            text: config.TranslateVirtualKeyboardButtonOff || "Virtual Keyboard (off)"
+            text: (virtualKeyboardButton.checked ? (config.TranslateVirtualKeyboardButtonOn || "Virtual Keyboard (on)") : (config.TranslateVirtualKeyboardButtonOff || "Virtual Keyboard (off)")).toUpperCase()
             font.pointSize: root.font.pointSize * 0.8
-            font.family: root.font.family
-            color: parent.visualFocus ? config.HoverVirtualKeyboardButtonTextColor : config.VirtualKeyboardButtonTextColor
+            font.family: root.mainFontFamily
+            font.bold: true
+            color: virtualKeyboardButton.hovered ? "#FFFFFF" : (config.VirtualKeyboardButtonTextColor || "#81C7F5")
+            
+            Behavior on color { ColorAnimation { duration: 150 } }
         }
 
         background: Rectangle {
-            id: virtualKeyboardButtonBackground
-
-            color: "transparent"
+            color: virtualKeyboardButton.hovered ? "#1400A3EC" : "#08FFFFFF"
+            border.color: virtualKeyboardButton.hovered ? "#00A3EC" : "#1AFFFFFF"
+            border.width: 1
+            radius: 8
+            
+            Behavior on color { ColorAnimation { duration: 150 } }
+            Behavior on border.color { ColorAnimation { duration: 150 } }
         }
-        states: [
-            State {
-                name: "HoveredAndChecked"
-                when: virtualKeyboardButton.checked && virtualKeyboardButton.hovered
-                PropertyChanges {
-                    target: virtualKeyboardButtonText
-                    text: config.TranslateVirtualKeyboardButtonOn || "Virtual Keyboard (on)"
-                    color: config.HoverVirtualKeyboardButtonTextColor
-                }
-            },
-            State {
-                name: "checked"
-                when: virtualKeyboardButton.checked
-                PropertyChanges {
-                    target: virtualKeyboardButtonText
-                    text: config.TranslateVirtualKeyboardButtonOn || "Virtual Keyboard (on)"
-                }
-            },
-            State {
-                name: "hovered"
-                when: virtualKeyboardButton.hovered
-                PropertyChanges {
-                    target: virtualKeyboardButtonText
-                    text: config.TranslateVirtualKeyboardButtonOff || "Virtual Keyboard (off)"
-                    color: config.HoverVirtualKeyboardButtonTextColor
-                }
-            }
-        ]
     }
 }
