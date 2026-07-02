@@ -230,17 +230,65 @@ Pane {
                 Behavior on border.color { ColorAnimation { duration: 400 } }
 
                 // Corner accents (top-left)
-                Rectangle { width: 14; height: 2; color: "#00A3EC"; opacity: isUnlocked ? 0 : 1; Behavior on opacity { NumberAnimation { duration: 300 } }; anchors.left: parent.left; anchors.top: parent.top; anchors.leftMargin: 1 }
-                Rectangle { width: 2; height: 14; color: "#00A3EC"; opacity: isUnlocked ? 0 : 1; Behavior on opacity { NumberAnimation { duration: 300 } }; anchors.left: parent.left; anchors.top: parent.top; anchors.topMargin: 1 }
+                Rectangle {
+                    width: 14; height: 2; color: "#00A3EC"
+                    opacity: isUnlocked ? 0 : 1
+                    Behavior on opacity { NumberAnimation { duration: 300 } }
+                    anchors.left: parent.left; anchors.leftMargin: 1
+                    anchors.top: parent.top
+                }
+                Rectangle {
+                    width: 2; height: 14; color: "#00A3EC"
+                    opacity: isUnlocked ? 0 : 1
+                    Behavior on opacity { NumberAnimation { duration: 300 } }
+                    anchors.left: parent.left
+                    anchors.top: parent.top; anchors.topMargin: 1
+                }
                 // Corner accents (top-right)
-                Rectangle { width: 14; height: 2; color: "#00A3EC"; opacity: isUnlocked ? 0 : 1; Behavior on opacity { NumberAnimation { duration: 300 } }; anchors.right: parent.right; anchors.top: parent.top; anchors.rightMargin: 1 }
-                Rectangle { width: 2; height: 14; color: "#00A3EC"; opacity: isUnlocked ? 0 : 1; Behavior on opacity { NumberAnimation { duration: 300 } }; anchors.right: parent.right; anchors.top: parent.top; anchors.topMargin: 1 }
+                Rectangle {
+                    width: 14; height: 2; color: "#00A3EC"
+                    opacity: isUnlocked ? 0 : 1
+                    Behavior on opacity { NumberAnimation { duration: 300 } }
+                    anchors.right: parent.right; anchors.rightMargin: 1
+                    anchors.top: parent.top
+                }
+                Rectangle {
+                    width: 2; height: 14; color: "#00A3EC"
+                    opacity: isUnlocked ? 0 : 1
+                    Behavior on opacity { NumberAnimation { duration: 300 } }
+                    anchors.right: parent.right
+                    anchors.top: parent.top; anchors.topMargin: 1
+                }
                 // Corner accents (bottom-left)
-                Rectangle { width: 14; height: 2; color: "#00A3EC"; opacity: isUnlocked ? 0 : 1; Behavior on opacity { NumberAnimation { duration: 300 } }; anchors.left: parent.left; anchors.bottom: parent.bottom; anchors.leftMargin: 1 }
-                Rectangle { width: 2; height: 14; color: "#00A3EC"; opacity: isUnlocked ? 0 : 1; Behavior on opacity { NumberAnimation { duration: 300 } }; anchors.left: parent.left; anchors.bottom: parent.bottom; anchors.bottomMargin: 1 }
+                Rectangle {
+                    width: 14; height: 2; color: "#00A3EC"
+                    opacity: isUnlocked ? 0 : 1
+                    Behavior on opacity { NumberAnimation { duration: 300 } }
+                    anchors.left: parent.left; anchors.leftMargin: 1
+                    anchors.bottom: parent.bottom
+                }
+                Rectangle {
+                    width: 2; height: 14; color: "#00A3EC"
+                    opacity: isUnlocked ? 0 : 1
+                    Behavior on opacity { NumberAnimation { duration: 300 } }
+                    anchors.left: parent.left
+                    anchors.bottom: parent.bottom; anchors.bottomMargin: 1
+                }
                 // Corner accents (bottom-right)
-                Rectangle { width: 14; height: 2; color: "#00A3EC"; opacity: isUnlocked ? 0 : 1; Behavior on opacity { NumberAnimation { duration: 300 } }; anchors.right: parent.right; anchors.bottom: parent.bottom; anchors.rightMargin: 1 }
-                Rectangle { width: 2; height: 14; color: "#00A3EC"; opacity: isUnlocked ? 0 : 1; Behavior on opacity { NumberAnimation { duration: 300 } }; anchors.right: parent.right; anchors.bottom: parent.bottom; anchors.bottomMargin: 1 }
+                Rectangle {
+                    width: 14; height: 2; color: "#00A3EC"
+                    opacity: isUnlocked ? 0 : 1
+                    Behavior on opacity { NumberAnimation { duration: 300 } }
+                    anchors.right: parent.right; anchors.rightMargin: 1
+                    anchors.bottom: parent.bottom
+                }
+                Rectangle {
+                    width: 2; height: 14; color: "#00A3EC"
+                    opacity: isUnlocked ? 0 : 1
+                    Behavior on opacity { NumberAnimation { duration: 300 } }
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom; anchors.bottomMargin: 1
+                }
 
                 // ── Content inside the card ──────────────────────────────
                 Column {
