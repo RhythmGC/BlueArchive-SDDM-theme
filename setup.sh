@@ -162,17 +162,6 @@ download_media() {
         sudo rm -f "$dst/Backgrounds/images/${theme}.jpg" 2>/dev/null || true
     fi
 
-    # Helper function to download using curl, bypass Pixiv 403
-    download_file() {
-        local url="$1"
-        local out="$2"
-        local extra_opts=()
-        if [[ "$url" == *"pximg.net"* ]]; then
-            extra_opts=(-H "Referer: https://www.pixiv.net/")
-        fi
-        curl -L -f -s "${extra_opts[@]}" "$url" -o "$out"
-    }
-    
     # If the video URL is actually a static image file, treat it as image only
     local is_video_static=false
     if [[ "$video_url" =~ \.(jpg|jpeg|png|webp|gif)$ ]]; then
@@ -186,7 +175,11 @@ download_media() {
     if [[ -n "$video_url" ]]; then
         local video_file="$vid_dir/${theme}.mp4"
         if [[ ! -f "$video_file" ]]; then
-            spin "Downloading video for $theme..." download_file "$video_url" "$video_file"
+            local extra_opts=()
+            if [[ "$video_url" == *"pximg.net"* ]]; then
+                extra_opts=(-H "Referer: https://www.pixiv.net/")
+            fi
+            spin "Downloading video for $theme..." curl -L -f -s "${extra_opts[@]}" "$video_url" -o "$video_file"
         fi
         if [[ -f "$conf_file" ]]; then
             sed -i "s|^Background=.*|Background=\"Backgrounds/videos/${theme}.mp4\"|" "$conf_file"
@@ -201,7 +194,11 @@ download_media() {
     if [[ -n "$image_url" ]]; then
         local image_file="$img_dir/${theme}.jpg"
         if [[ ! -f "$image_file" ]]; then
-            spin "Downloading image for $theme..." download_file "$image_url" "$image_file"
+            local extra_opts=()
+            if [[ "$image_url" == *"pximg.net"* ]]; then
+                extra_opts=(-H "Referer: https://www.pixiv.net/")
+            fi
+            spin "Downloading image for $theme..." curl -L -f -s "${extra_opts[@]}" "$image_url" -o "$image_file"
         fi
         if [[ -f "$conf_file" ]]; then
             sed -i "s|^BackgroundPlaceholder=.*|BackgroundPlaceholder=\"Backgrounds/images/${theme}.jpg\"|" "$conf_file"
