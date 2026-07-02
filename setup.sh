@@ -154,6 +154,14 @@ download_media() {
         cp "$SCRIPT_DIR/Themes/yuuka_hayase.conf" "$conf_file"
     fi
 
+    # Clean up old downloaded files for this theme to prevent conflicts or stale cache
+    rm -f "$vid_dir/${theme}.mp4" "$img_dir/${theme}.jpg"
+    local dst="$THEMES_DIR/$THEME_NAME"
+    if [[ -d "$dst" ]]; then
+        sudo rm -f "$dst/Backgrounds/videos/${theme}.mp4" 2>/dev/null || true
+        sudo rm -f "$dst/Backgrounds/images/${theme}.jpg" 2>/dev/null || true
+    fi
+
     # Helper function to download using curl, bypass Pixiv 403
     download_file() {
         local url="$1"
