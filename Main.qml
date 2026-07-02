@@ -120,17 +120,10 @@ Pane {
             id: welcomeCard
             
             // Starts centered, then morphs to targetLoginForm position/size
-            width: !isUnlocked ? Math.min(parent.width * 0.38, 560) : (parent.width / 3.2)
+            width: !isUnlocked ? Math.min(parent.width * 0.38, 560) : (parent.width * 0.65)
             height: !isUnlocked ? Math.min(parent.height * 0.52, 480) : (parent.height * 0.82)
             
-            x: !isUnlocked 
-               ? (parent.width - width) / 2 
-               : (config.FormPosition === "left" 
-                  ? parent.width * 0.05 
-                  : (config.FormPosition === "right" 
-                     ? parent.width - width - parent.width * 0.05 
-                     : (parent.width - width) / 2))
-            
+            x: (parent.width - width) / 2
             y: (parent.height - height) / 2
             radius: !isUnlocked ? 20 : 16
             

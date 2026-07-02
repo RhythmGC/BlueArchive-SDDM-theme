@@ -8,7 +8,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import SddmComponents 2.0 as SDDM
 
-ColumnLayout {
+RowLayout {
     id: formContainer
     SDDM.TextConstants { id: textConstants }
 
@@ -19,106 +19,125 @@ ColumnLayout {
         input.focusPassword();
     }
 
-    spacing: 12
+    spacing: root.font.pointSize * 2.5
 
-    // Beautiful SCHALE Header
-    Item {
-        id: headerContainer
+    // ── LEFT CONSOLE PANEL: Header, Clock & System ───────────────────
+    ColumnLayout {
         Layout.fillWidth: true
-        Layout.preferredHeight: root.font.pointSize * 6.5
-        Layout.alignment: Qt.AlignHCenter
+        Layout.fillHeight: true
+        Layout.preferredWidth: parent.width * 0.46
+        spacing: root.font.pointSize * 1.5
 
-        // Left: Schale logo - sized relative to this header's height
-        Image {
-            id: headerLogo
-            source: Qt.resolvedUrl("../Assets/logo/Schale_logo_emblem.png")
-            height: parent.height * 0.72
-            width: height
-            fillMode: Image.PreserveAspectFit
-            mipmap: true
-            anchors.left: parent.left
-            anchors.leftMargin: root.font.pointSize * 1.0
-            anchors.verticalCenter: parent.verticalCenter
-        }
-
-        // Right: title text block
-        Column {
-            anchors.left: headerLogo.right
-            anchors.leftMargin: root.font.pointSize * 0.8
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: root.font.pointSize * 0.15
-
-            Label {
-                text: "S C H A L E"
-                font.family: root.boldFontFamily
-                font.pointSize: root.font.pointSize * 1.2
-                font.bold: true
-                color: "#00A3EC"
+        // Beautiful SCHALE Header
+        Item {
+            id: headerContainer
+            Layout.fillWidth: true
+            Layout.preferredHeight: root.font.pointSize * 6.0
+            
+            // Left: Schale logo
+            Image {
+                id: headerLogo
+                source: Qt.resolvedUrl("../Assets/logo/Schale_logo_emblem.png")
+                height: parent.height * 0.8
+                width: height
+                fillMode: Image.PreserveAspectFit
+                mipmap: true
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
             }
-            Label {
-                text: "SYSTEM OPERATION TERMINAL"
-                font.family: root.mainFontFamily
-                font.pointSize: root.font.pointSize * 0.65
-                color: "#81C7F5"
-                opacity: 0.8
+
+            // Right: title text block
+            Column {
+                anchors.left: headerLogo.right
+                anchors.leftMargin: root.font.pointSize * 0.8
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: root.font.pointSize * 0.15
+
+                Label {
+                    text: "S.C.H.A.L.E"
+                    font.family: root.boldFontFamily
+                    font.pointSize: root.font.pointSize * 1.3
+                    font.bold: true
+                    color: "#00A3EC"
+                }
+                Label {
+                    text: "SYSTEM OPERATION TERMINAL"
+                    font.family: root.mainFontFamily
+                    font.pointSize: root.font.pointSize * 0.65
+                    color: "#81C7F5"
+                    opacity: 0.8
+                }
+            }
+
+            // Thin glowing header divider
+            Rectangle {
+                width: parent.width
+                height: 1
+                color: "#4000A3EC"
+                anchors.bottom: parent.bottom
             }
         }
 
-        // Thin glowing header divider
-        Rectangle {
-            width: parent.width - root.font.pointSize * 2
-            height: 1
-            color: "#4000A3EC"
-            anchors.bottom: parent.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
+        // Digital Clock Panel
+        Clock {
+            id: clock
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.preferredHeight: root.font.pointSize * 14
+        }
+
+        // Spacer to push power options down
+        Item {
+            Layout.fillHeight: true
+        }
+
+        // System Buttons (Shutdown, Reboot)
+        SystemButtons {
+            id: systemButtons
+            Layout.alignment: Qt.AlignLeft | Qt.AlignBottom
+            Layout.preferredHeight: root.font.pointSize * 4
+            exposedSession: input.exposeSession
         }
     }
 
-    Clock {
-        id: clock
-
-        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-        Layout.preferredHeight: root.height * 0.25
+    // ── RIGHT CONSOLE PANEL: Credentials Input ───────────────────────
+    ColumnLayout {
         Layout.fillWidth: true
-        Layout.leftMargin: 20
-        Layout.rightMargin: 20
-    }
+        Layout.fillHeight: true
+        Layout.preferredWidth: parent.width * 0.54
+        spacing: root.font.pointSize * 1.2
 
-    Input {
-        id: input
+        // Spacer to push input fields down for visual balance
+        Item {
+            Layout.fillHeight: true
+        }
 
-        Layout.alignment: Qt.AlignVCenter
-        Layout.preferredHeight: root.height * 0.22
-        Layout.fillWidth: true
-        Layout.topMargin: 5
-    }
+        // Username, Password & Login Button
+        Input {
+            id: input
+            Layout.fillWidth: true
+            Layout.preferredHeight: parent.height * 0.65
+        }
 
-    SystemButtons {
-        id: systemButtons
+        // Session Desktop Selector
+        SessionButton {
+            id: sessionSelect
+            Layout.alignment: Qt.AlignHCenter
+            Layout.preferredHeight: root.font.pointSize * 2.8
+            Layout.fillWidth: true
+        }
 
-        Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
-        Layout.preferredHeight: root.height * 0.12
-        Layout.maximumHeight: root.height * 0.12
-        Layout.leftMargin: p != "0" ? a == "left" ? -p : a == "right" ? p : 0 : 0
-        
-        exposedSession: input.exposeSession
-    }
-    
-    SessionButton {
-        id: sessionSelect
+        // On-screen Virtual Keyboard Button
+        VirtualKeyboardButton {
+            id: virtualKeyboardButton
+            Layout.alignment: Qt.AlignHCenter
+            Layout.preferredHeight: root.font.pointSize * 2.8
+            Layout.fillWidth: true
+        }
 
-        Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
-        Layout.preferredHeight: root.height / 54
-        Layout.maximumHeight: root.height / 54
-        Layout.leftMargin: p != "0" ? a == "left" ? -p : a == "right" ? p : 0 : 0
-    }
-
-    VirtualKeyboardButton {
-        id: virtualKeyboardButton
-
-        Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
-        Layout.preferredHeight: root.height / 27
-        Layout.maximumHeight: root.height / 27
-        Layout.leftMargin: p != "0" ? a == "left" ? -p : a == "right" ? p : 0 : 0
+        // Spacer at the bottom
+        Item {
+            Layout.fillHeight: true
+        }
     }
 }
