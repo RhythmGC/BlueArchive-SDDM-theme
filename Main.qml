@@ -357,7 +357,7 @@ Pane {
             id: backgroundPlaceholderImage
 
             z: 10
-            source: config.BackgroundPlaceholder
+            source: Qt.resolvedUrl(config.BackgroundPlaceholder)
             visible: false
         }
 
@@ -385,9 +385,9 @@ Pane {
             }
 
             height: parent.height
-            width: config.HaveFormBackground == "true" && config.FormPosition != "center" && config.PartialBlur != "true" ? parent.width - formBackground.width : parent.width
-            anchors.left: leftleft || leftcenter ? formBackground.right : undefined
-            anchors.right: rightright || rightcenter ? formBackground.left : undefined
+            width: config.HaveFormBackground == "true" && config.FormPosition != "center" && config.PartialBlur != "true" ? parent.width - welcomeCard.width : parent.width
+            anchors.left: leftleft || leftcenter ? welcomeCard.right : undefined
+            anchors.right: rightright || rightcenter ? welcomeCard.left : undefined
 
             horizontalAlignment: config.BackgroundHorizontalAlignment == "left" ?
                                  Image.AlignLeft :
@@ -416,7 +416,7 @@ Pane {
                     player.play();
                 }
                 else{
-                    backgroundImage.source = config.background || config.Background
+                    backgroundImage.source = Qt.resolvedUrl(config.background || config.Background)
                 }
             }
         }
