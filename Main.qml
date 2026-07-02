@@ -122,8 +122,8 @@ Pane {
             anchors.centerIn: parent
 
             // Starts centered, then morphs to targetLoginForm position/size
-            width: !isUnlocked ? Math.min(parent.width * 0.38, 560) : (parent.width * 0.65)
-            height: !isUnlocked ? Math.min(parent.height * 0.52, 480) : (parent.height * 0.56)
+            width: !isUnlocked ? Math.min(parent.width * 0.38, 560) : (parent.width * 0.74)
+            height: !isUnlocked ? Math.min(parent.height * 0.52, 480) : (parent.height * 0.55)
             
             radius: !isUnlocked ? 20 : 16
             
@@ -195,7 +195,7 @@ Pane {
             LoginForm {
                 id: form
                 anchors.fill: parent
-                anchors.margins: 15
+                anchors.margins: 8
                 
                 opacity: formReady ? 1.0 : 0.0
                 visible: opacity > 0.0

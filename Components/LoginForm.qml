@@ -19,13 +19,13 @@ RowLayout {
         input.focusPassword();
     }
 
-    spacing: root.font.pointSize * 2.5
+    spacing: root.font.pointSize * 1.5
 
     // ── LEFT CONSOLE PANEL: Header, Clock & System ───────────────────
     ColumnLayout {
         Layout.fillWidth: true
         Layout.fillHeight: true
-        Layout.preferredWidth: parent.width * 0.46
+        Layout.preferredWidth: parent.width * 0.44
         spacing: root.font.pointSize * 1.5
 
         // Beautiful SCHALE Header
@@ -104,7 +104,7 @@ RowLayout {
     ColumnLayout {
         Layout.fillWidth: true
         Layout.fillHeight: true
-        Layout.preferredWidth: parent.width * 0.54
+        Layout.preferredWidth: parent.width * 0.56
         spacing: root.font.pointSize * 1.2
 
         // Spacer to push input fields down for visual balance
