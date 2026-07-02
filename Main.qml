@@ -115,76 +115,142 @@ Pane {
             opacity: config.DimBackground
         }
 
+        // ── The Morphing Card Backdrop ──────────────────────────────────
         Rectangle {
-            id: formBackground
-
-            anchors.fill: form
-            anchors.centerIn: form
+            id: welcomeCard
+            
+            // Starts centered, then morphs to targetLoginForm position/size
+            width: !isUnlocked ? Math.min(parent.width * 0.38, 560) : (parent.width / 3.2)
+            height: !isUnlocked ? Math.min(parent.height * 0.52, 480) : (parent.height * 0.82)
+            
+            x: !isUnlocked 
+               ? (parent.width - width) / 2 
+               : (config.FormPosition === "left" 
+                  ? parent.width * 0.05 
+                  : (config.FormPosition === "right" 
+                     ? parent.width - width - parent.width * 0.05 
+                     : (parent.width - width) / 2))
+            
+            y: (parent.height - height) / 2
+            radius: !isUnlocked ? 20 : 16
+            
             z: 1
 
+            // Smooth animations for morphing!
+            Behavior on width  { NumberAnimation { duration: 600; easing.type: Easing.InOutQuart } }
+            Behavior on height { NumberAnimation { duration: 600; easing.type: Easing.InOutQuart } }
+            Behavior on x      { NumberAnimation { duration: 600; easing.type: Easing.InOutQuart } }
+            Behavior on y      { NumberAnimation { duration: 600; easing.type: Easing.InOutQuart } }
+            Behavior on radius { NumberAnimation { duration: 600; easing.type: Easing.InOutQuart } }
+
+            // Frosted glass background
             color: config.FormBackgroundColor || "#121625"
-            visible: form.visible
-            opacity: form.opacity * (config.PartialBlur == "true" ? 0.85 : 0.95)
-            scale: form.scale
-            radius: 16
+            opacity: config.PartialBlur == "true" ? 0.85 : 0.95
+            
             border.color: "#5900A3EC"
             border.width: 1.5
 
-            // Small high-tech corner decorations
+            // Corner accents (always hug the card edges as it morphs!)
             Rectangle {
-                width: 12; height: 2; color: "#00A3EC"
-                anchors.left: parent.left; anchors.top: parent.top
+                width: 14; height: 2; color: "#00A3EC"
+                anchors.left: parent.left; anchors.leftMargin: 1
+                anchors.top: parent.top
             }
             Rectangle {
-                width: 2; height: 12; color: "#00A3EC"
-                anchors.left: parent.left; anchors.top: parent.top
+                width: 2; height: 14; color: "#00A3EC"
+                anchors.left: parent.left
+                anchors.top: parent.top; anchors.topMargin: 1
             }
             Rectangle {
-                width: 12; height: 2; color: "#00A3EC"
-                anchors.right: parent.right; anchors.top: parent.top
+                width: 14; height: 2; color: "#00A3EC"
+                anchors.right: parent.right; anchors.rightMargin: 1
+                anchors.top: parent.top
             }
             Rectangle {
-                width: 2; height: 12; color: "#00A3EC"
-                anchors.right: parent.right; anchors.top: parent.top
+                width: 2; height: 14; color: "#00A3EC"
+                anchors.right: parent.right
+                anchors.top: parent.top; anchors.topMargin: 1
             }
             Rectangle {
-                width: 12; height: 2; color: "#00A3EC"
-                anchors.left: parent.left; anchors.bottom: parent.bottom
+                width: 14; height: 2; color: "#00A3EC"
+                anchors.left: parent.left; anchors.leftMargin: 1
+                anchors.bottom: parent.bottom
             }
             Rectangle {
-                width: 2; height: 12; color: "#00A3EC"
-                anchors.left: parent.left; anchors.bottom: parent.bottom
+                width: 2; height: 14; color: "#00A3EC"
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom; anchors.bottomMargin: 1
             }
             Rectangle {
-                width: 12; height: 2; color: "#00A3EC"
-                anchors.right: parent.right; anchors.bottom: parent.bottom
+                width: 14; height: 2; color: "#00A3EC"
+                anchors.right: parent.right; anchors.rightMargin: 1
+                anchors.bottom: parent.bottom
             }
             Rectangle {
-                width: 2; height: 12; color: "#00A3EC"
-                anchors.right: parent.right; anchors.bottom: parent.bottom
+                width: 2; height: 14; color: "#00A3EC"
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom; anchors.bottomMargin: 1
             }
-        }
 
-        LoginForm {
-            id: form
+            // ── Welcome Screen Content (fades out on unlock) ─────────────
+            Column {
+                id: welcomeContent
+                anchors.centerIn: parent
+                spacing: welcomeCard.height * 0.05
+                opacity: !isUnlocked ? 1.0 : 0.0
+                visible: opacity > 0.0
+                
+                Behavior on opacity { NumberAnimation { duration: 250; easing.type: Easing.OutQuad } }
 
-            height: parent.height * 0.82
-            width: parent.width / 3.2
-            anchors.left: config.FormPosition == "left" ? parent.left : undefined
-            anchors.horizontalCenter: config.FormPosition == "center" ? parent.horizontalCenter : undefined
-            anchors.right: config.FormPosition == "right" ? parent.right : undefined
-            anchors.leftMargin: config.FormPosition == "left" ? parent.width * 0.05 : 0
-            anchors.rightMargin: config.FormPosition == "right" ? parent.width * 0.05 : 0
-            anchors.verticalCenter: parent.verticalCenter
-            z: 1
+                // Schale logo
+                Image {
+                    id: schaleLogoWelcome
+                    source: Qt.resolvedUrl("Assets/logo/Schale_logo_emblem.png")
+                    width:  welcomeCard.width * 0.38
+                    height: width
+                    fillMode: Image.PreserveAspectFit
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    mipmap: true
+                }
 
-            // Dynamic opacity and scale — waits for card expand to finish
-            opacity: formReady ? 1.0 : 0.0
-            scale: formReady ? 1.0 : 0.88
-            visible: opacity > 0.0
+                // OS name logo
+                Image {
+                    source: Qt.resolvedUrl("Assets/logo/BlueArchiveOS-Linux_sharp.png")
+                    width:  welcomeCard.width * 0.72
+                    height: width * 0.3125
+                    fillMode: Image.PreserveAspectFit
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    mipmap: true
+                }
 
-            Behavior on opacity { NumberAnimation { duration: 450; easing.type: Easing.OutQuad } }
-            Behavior on scale   { NumberAnimation { duration: 450; easing.type: Easing.OutBack } }
+                // Pulsing "Press any key" hint
+                Label {
+                    text: "PRESS ANY KEY OR CLICK TO AUTHORIZE"
+                    font.family: root.mainFontFamily
+                    font.pointSize: root.font.pointSize * 0.72
+                    color: "#81C7F5"
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    SequentialAnimation on opacity {
+                        loops: Animation.Infinite
+                        running: !isUnlocked
+                        NumberAnimation { from: 0.3; to: 1.0; duration: 1200; easing.type: Easing.InOutQuad }
+                        NumberAnimation { from: 1.0; to: 0.3; duration: 1200; easing.type: Easing.InOutQuad }
+                    }
+                }
+            }
+
+            // ── Login Form Content (fades in after expansion completes) ──
+            LoginForm {
+                id: form
+                anchors.fill: parent
+                anchors.margins: 15
+                
+                opacity: formReady ? 1.0 : 0.0
+                visible: opacity > 0.0
+
+                Behavior on opacity { NumberAnimation { duration: 450; easing.type: Easing.OutQuad } }
+            }
         }
 
         // Fullscreen lock MouseArea to capture clicks
@@ -196,146 +262,6 @@ Pane {
             onClicked: {
                 isUnlocked = true;
                 formRevealTimer.start();
-            }
-        }
-
-        // ── Welcome Lock Screen Overlay ──────────────────────────────────
-        Item {
-            id: welcomeOverlay
-            anchors.fill: parent
-            z: 9
-            visible: config.ShowWelcomeScreen == "true" && !formReady
-
-            // ── Expanding blur backdrop ──────────────────────────────────
-            // Starts as a small rounded card, expands to fill the screen
-            Rectangle {
-                id: welcomeCard
-                anchors.centerIn: parent
-
-                // Animate from small card → fullscreen
-                width:  isUnlocked ? parent.width  : Math.min(parent.width  * 0.38, 560)
-                height: isUnlocked ? parent.height : Math.min(parent.height * 0.52, 480)
-                radius: isUnlocked ? 0 : 20
-
-                Behavior on width  { NumberAnimation { duration: 600; easing.type: Easing.InOutQuart } }
-                Behavior on height { NumberAnimation { duration: 600; easing.type: Easing.InOutQuart } }
-                Behavior on radius { NumberAnimation { duration: 600; easing.type: Easing.InOutQuart } }
-
-                // Frosted glass background
-                color: "#CC0A0F1E"
-
-                // Subtle cyan border (fades away on expand)
-                border.color: isUnlocked ? "#0000A3EC" : "#8000A3EC"
-                border.width: 1.5
-                Behavior on border.color { ColorAnimation { duration: 400 } }
-
-                // Corner accents (top-left)
-                Rectangle {
-                    width: 14; height: 2; color: "#00A3EC"
-                    opacity: isUnlocked ? 0 : 1
-                    Behavior on opacity { NumberAnimation { duration: 300 } }
-                    anchors.left: parent.left; anchors.leftMargin: 1
-                    anchors.top: parent.top
-                }
-                Rectangle {
-                    width: 2; height: 14; color: "#00A3EC"
-                    opacity: isUnlocked ? 0 : 1
-                    Behavior on opacity { NumberAnimation { duration: 300 } }
-                    anchors.left: parent.left
-                    anchors.top: parent.top; anchors.topMargin: 1
-                }
-                // Corner accents (top-right)
-                Rectangle {
-                    width: 14; height: 2; color: "#00A3EC"
-                    opacity: isUnlocked ? 0 : 1
-                    Behavior on opacity { NumberAnimation { duration: 300 } }
-                    anchors.right: parent.right; anchors.rightMargin: 1
-                    anchors.top: parent.top
-                }
-                Rectangle {
-                    width: 2; height: 14; color: "#00A3EC"
-                    opacity: isUnlocked ? 0 : 1
-                    Behavior on opacity { NumberAnimation { duration: 300 } }
-                    anchors.right: parent.right
-                    anchors.top: parent.top; anchors.topMargin: 1
-                }
-                // Corner accents (bottom-left)
-                Rectangle {
-                    width: 14; height: 2; color: "#00A3EC"
-                    opacity: isUnlocked ? 0 : 1
-                    Behavior on opacity { NumberAnimation { duration: 300 } }
-                    anchors.left: parent.left; anchors.leftMargin: 1
-                    anchors.bottom: parent.bottom
-                }
-                Rectangle {
-                    width: 2; height: 14; color: "#00A3EC"
-                    opacity: isUnlocked ? 0 : 1
-                    Behavior on opacity { NumberAnimation { duration: 300 } }
-                    anchors.left: parent.left
-                    anchors.bottom: parent.bottom; anchors.bottomMargin: 1
-                }
-                // Corner accents (bottom-right)
-                Rectangle {
-                    width: 14; height: 2; color: "#00A3EC"
-                    opacity: isUnlocked ? 0 : 1
-                    Behavior on opacity { NumberAnimation { duration: 300 } }
-                    anchors.right: parent.right; anchors.rightMargin: 1
-                    anchors.bottom: parent.bottom
-                }
-                Rectangle {
-                    width: 2; height: 14; color: "#00A3EC"
-                    opacity: isUnlocked ? 0 : 1
-                    Behavior on opacity { NumberAnimation { duration: 300 } }
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom; anchors.bottomMargin: 1
-                }
-
-                // ── Content inside the card ──────────────────────────────
-                Column {
-                    anchors.centerIn: parent
-                    spacing: welcomeCard.height * 0.05
-
-                    // Fade content out when expanding
-                    opacity: isUnlocked ? 0.0 : 1.0
-                    Behavior on opacity { NumberAnimation { duration: 250; easing.type: Easing.OutQuad } }
-
-                    // Schale logo
-                    Image {
-                        id: schaleLogoWelcome
-                        source: Qt.resolvedUrl("Assets/logo/Schale_logo_emblem.png")
-                        width:  welcomeCard.width * 0.38
-                        height: width
-                        fillMode: Image.PreserveAspectFit
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        mipmap: true
-                    }
-
-                    // OS name logo
-                    Image {
-                        source: Qt.resolvedUrl("Assets/logo/BlueArchiveOS-Linux_sharp.png")
-                        width:  welcomeCard.width * 0.72
-                        height: width * 0.3125
-                        fillMode: Image.PreserveAspectFit
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        mipmap: true
-                    }
-
-                    // Pulsing "Press any key" hint
-                    Label {
-                        text: "PRESS ANY KEY OR CLICK TO AUTHORIZE"
-                        font.family: root.mainFontFamily
-                        font.pointSize: root.font.pointSize * 0.72
-                        color: "#81C7F5"
-                        anchors.horizontalCenter: parent.horizontalCenter
-
-                        SequentialAnimation on opacity {
-                            loops: Animation.Infinite
-                            running: !isUnlocked
-                            NumberAnimation { from: 0.3; to: 1.0; duration: 1200; easing.type: Easing.InOutQuad }
-                            NumberAnimation { from: 1.0; to: 0.3; duration: 1200; easing.type: Easing.InOutQuad }
-                        }
-                    }
-                }
             }
         }
 
