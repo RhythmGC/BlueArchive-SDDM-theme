@@ -107,9 +107,9 @@ RowLayout {
         Layout.preferredWidth: parent.width * 0.56
         spacing: root.font.pointSize * 1.2
 
-        // Spacer to push input fields down for visual balance
+        // Top Spacer to align username input with the left clock panel
         Item {
-            Layout.fillHeight: true
+            Layout.preferredHeight: root.font.pointSize * 7.5
         }
 
         // Username, Password & Login Button
