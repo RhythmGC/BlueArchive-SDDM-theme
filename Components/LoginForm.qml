@@ -25,47 +25,48 @@ ColumnLayout {
     Item {
         id: headerContainer
         Layout.fillWidth: true
-        Layout.preferredHeight: 70
+        Layout.preferredHeight: root.font.pointSize * 6.5
         Layout.alignment: Qt.AlignHCenter
-        
-        RowLayout {
-            anchors.fill: parent
-            anchors.margins: 15
-            spacing: 12
-            
-            // Actual Schale Logo Image
-            Image {
-                source: Qt.resolvedUrl("../Assets/logo/Schale_logo_emblem.png")
-                Layout.preferredWidth: 44
-                Layout.preferredHeight: 44
-                fillMode: Image.PreserveAspectFit
-                mipmap: true
+
+        // Left: Schale logo - sized relative to this header's height
+        Image {
+            id: headerLogo
+            source: Qt.resolvedUrl("../Assets/logo/Schale_logo_emblem.png")
+            height: parent.height * 0.72
+            width: height
+            fillMode: Image.PreserveAspectFit
+            mipmap: true
+            anchors.left: parent.left
+            anchors.leftMargin: root.font.pointSize * 1.0
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
+        // Right: title text block
+        Column {
+            anchors.left: headerLogo.right
+            anchors.leftMargin: root.font.pointSize * 0.8
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: root.font.pointSize * 0.15
+
+            Label {
+                text: "S C H A L E"
+                font.family: root.boldFontFamily
+                font.pointSize: root.font.pointSize * 1.2
+                font.bold: true
+                color: "#00A3EC"
             }
-            
-            ColumnLayout {
-                spacing: 2
-                Layout.fillWidth: true
-                
-                Label {
-                    text: "S C H A L E"
-                    font.family: root.boldFontFamily
-                    font.pointSize: root.font.pointSize * 1.1
-                    font.bold: true
-                    color: "#00A3EC"
-                }
-                Label {
-                    text: "SYSTEM OPERATION TERMINAL"
-                    font.family: root.mainFontFamily
-                    font.pointSize: root.font.pointSize * 0.65
-                    color: "#81C7F5"
-                    opacity: 0.8
-                }
+            Label {
+                text: "SYSTEM OPERATION TERMINAL"
+                font.family: root.mainFontFamily
+                font.pointSize: root.font.pointSize * 0.65
+                color: "#81C7F5"
+                opacity: 0.8
             }
         }
-        
+
         // Thin glowing header divider
         Rectangle {
-            width: parent.width - 30
+            width: parent.width - root.font.pointSize * 2
             height: 1
             color: "#4000A3EC"
             anchors.bottom: parent.bottom

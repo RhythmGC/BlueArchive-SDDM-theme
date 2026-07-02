@@ -236,7 +236,7 @@ Pane {
             Image {
                 id: schaleLogoWelcome
                 source: Qt.resolvedUrl("Assets/logo/Schale_logo_emblem.png")
-                width: haloRing.width * 0.55
+                width: haloRing.width * 0.75
                 height: width
                 fillMode: Image.PreserveAspectFit
                 anchors.centerIn: haloRing
