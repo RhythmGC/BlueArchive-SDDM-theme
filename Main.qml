@@ -138,47 +138,47 @@ Pane {
             color: config.FormBackgroundColor || "#121625"
             opacity: config.PartialBlur == "true" ? 0.85 : 0.95
             
-            border.color: "#5900A3EC"
+            border.color: "#5938BDF8"
             border.width: 1.5
 
             // Corner accents (always hug the card edges as it morphs!)
             Rectangle {
-                width: 14; height: 2; color: "#00A3EC"
+                width: 14; height: 2; color: "#38BDF8"
                 anchors.left: parent.left; anchors.leftMargin: 1
                 anchors.top: parent.top
             }
             Rectangle {
-                width: 2; height: 14; color: "#00A3EC"
+                width: 2; height: 14; color: "#38BDF8"
                 anchors.left: parent.left
                 anchors.top: parent.top; anchors.topMargin: 1
             }
             Rectangle {
-                width: 14; height: 2; color: "#00A3EC"
+                width: 14; height: 2; color: "#38BDF8"
                 anchors.right: parent.right; anchors.rightMargin: 1
                 anchors.top: parent.top
             }
             Rectangle {
-                width: 2; height: 14; color: "#00A3EC"
+                width: 2; height: 14; color: "#38BDF8"
                 anchors.right: parent.right
                 anchors.top: parent.top; anchors.topMargin: 1
             }
             Rectangle {
-                width: 14; height: 2; color: "#00A3EC"
+                width: 14; height: 2; color: "#38BDF8"
                 anchors.left: parent.left; anchors.leftMargin: 1
                 anchors.bottom: parent.bottom
             }
             Rectangle {
-                width: 2; height: 14; color: "#00A3EC"
+                width: 2; height: 14; color: "#38BDF8"
                 anchors.left: parent.left
                 anchors.bottom: parent.bottom; anchors.bottomMargin: 1
             }
             Rectangle {
-                width: 14; height: 2; color: "#00A3EC"
+                width: 14; height: 2; color: "#38BDF8"
                 anchors.right: parent.right; anchors.rightMargin: 1
                 anchors.bottom: parent.bottom
             }
             Rectangle {
-                width: 2; height: 14; color: "#00A3EC"
+                width: 2; height: 14; color: "#38BDF8"
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom; anchors.bottomMargin: 1
             }

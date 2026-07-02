@@ -35,9 +35,9 @@ RowLayout {
             icon.source: modelData ? Qt.resolvedUrl("../Assets/" + modelData[0] + ".svg") : ""
             icon.height: root.font.pointSize * 1.8
             icon.width: root.font.pointSize * 1.8
-            icon.color: hovered ? "#00A3EC" : (config.SystemButtonsIconsColor || "#81C7F5")
+            icon.color: hovered ? "#38BDF8" : (config.SystemButtonsIconsColor || "#81C7F5")
             
-            palette.buttonText: hovered ? "#00A3EC" : (config.SystemButtonsIconsColor || "#81C7F5")
+            palette.buttonText: hovered ? "#38BDF8" : (config.SystemButtonsIconsColor || "#81C7F5")
             display: AbstractButton.TextUnderIcon
             visible: config.HideSystemButtons != "true" && (config.BypassSystemButtonsChecks == "true" ? 1 : modelData[2])
             hoverEnabled: true
@@ -48,8 +48,8 @@ RowLayout {
             background: Rectangle {
                 implicitWidth: root.font.pointSize * 4.8
                 implicitHeight: root.font.pointSize * 4.8
-                color: sysBtn.hovered ? "#1F00A3EC" : "#0AFFFFFF"
-                border.color: sysBtn.hovered ? "#00A3EC" : "#1FFFFFFF"
+                color: sysBtn.hovered ? "#1F38BDF8" : "#0AFFFFFF"
+                border.color: sysBtn.hovered ? "#38BDF8" : "#1FFFFFFF"
                 border.width: sysBtn.hovered ? 1.5 : 1
                 radius: width / 2
                 

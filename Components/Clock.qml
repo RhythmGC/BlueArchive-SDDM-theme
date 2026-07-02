@@ -15,42 +15,42 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        color: "#0D00A3EC" // soft blue transparent background
-        border.color: "#4000A3EC"
+        color: "#0D38BDF8" // soft blue transparent background
+        border.color: "#4038BDF8"
         border.width: 1
         radius: 8
 
         // Small tech style corners
         Rectangle {
-            width: 8; height: 1; color: "#00A3EC"
+            width: 8; height: 1; color: "#38BDF8"
             anchors.left: parent.left; anchors.top: parent.top
         }
         Rectangle {
-            width: 1; height: 8; color: "#00A3EC"
+            width: 1; height: 8; color: "#38BDF8"
             anchors.left: parent.left; anchors.top: parent.top
         }
         Rectangle {
-            width: 8; height: 1; color: "#00A3EC"
+            width: 8; height: 1; color: "#38BDF8"
             anchors.right: parent.right; anchors.top: parent.top
         }
         Rectangle {
-            width: 1; height: 8; color: "#00A3EC"
+            width: 1; height: 8; color: "#38BDF8"
             anchors.right: parent.right; anchors.top: parent.top
         }
         Rectangle {
-            width: 8; height: 1; color: "#00A3EC"
+            width: 8; height: 1; color: "#38BDF8"
             anchors.left: parent.left; anchors.bottom: parent.bottom
         }
         Rectangle {
-            width: 1; height: 8; color: "#00A3EC"
+            width: 1; height: 8; color: "#38BDF8"
             anchors.left: parent.left; anchors.bottom: parent.bottom
         }
         Rectangle {
-            width: 8; height: 1; color: "#00A3EC"
+            width: 8; height: 1; color: "#38BDF8"
             anchors.right: parent.right; anchors.bottom: parent.bottom
         }
         Rectangle {
-            width: 1; height: 8; color: "#00A3EC"
+            width: 1; height: 8; color: "#38BDF8"
             anchors.right: parent.right; anchors.bottom: parent.bottom
         }
 
@@ -89,7 +89,7 @@ Item {
                 font.family: root.mainFontFamily
                 font.pointSize: root.font.pointSize * 1.0
                 font.bold: true
-                color: "#00A3EC"
+                color: "#38BDF8"
                 renderType: Text.QtRendering
 
                 function updateTime() {

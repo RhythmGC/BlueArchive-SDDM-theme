@@ -58,7 +58,7 @@ RowLayout {
                     font.family: root.boldFontFamily
                     font.pointSize: root.font.pointSize * 1.3
                     font.bold: true
-                    color: "#00A3EC"
+                    color: "#38BDF8"
                 }
                 Label {
                     text: "SYSTEM OPERATION TERMINAL"
@@ -73,7 +73,7 @@ RowLayout {
             Rectangle {
                 width: parent.width
                 height: 1
-                color: "#4000A3EC"
+                color: "#4038BDF8"
                 anchors.bottom: parent.bottom
             }
         }

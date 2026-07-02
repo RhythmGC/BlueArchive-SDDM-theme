@@ -95,7 +95,7 @@ Column {
                 }
                 
                 background: Rectangle {
-                    color: selectUser.highlightedIndex === index ? "#00A3EC" : "transparent"
+                    color: selectUser.highlightedIndex === index ? "#38BDF8" : "transparent"
                     radius: 4
                 }
             }
@@ -109,7 +109,7 @@ Column {
                 icon.height: parent.height * 0.28
                 icon.width: parent.height * 0.28
                 enabled: false
-                icon.color: username.activeFocus ? "#00A3EC" : "#99FFFFFF"
+                icon.color: username.activeFocus ? "#38BDF8" : "#99FFFFFF"
                 icon.source: Qt.resolvedUrl("../Assets/User.svg")
                 
                 background: Rectangle { color: "transparent" }
@@ -136,7 +136,7 @@ Column {
                 background: Rectangle {
                     radius: 8
                     color: "#1E293B"
-                    border.color: "#6600A3EC"
+                    border.color: "#6638BDF8"
                     border.width: 1
                 }
 
@@ -172,9 +172,9 @@ Column {
             }
 
             background: Rectangle {
-                color: username.activeFocus ? "#1400A3EC" : (config.LoginFieldBackgroundColor || "#1E293B")
+                color: username.activeFocus ? "#1438BDF8" : (config.LoginFieldBackgroundColor || "#1E293B")
                 opacity: username.activeFocus ? 0.95 : 0.65
-                border.color: username.activeFocus ? "#00A3EC" : "#4000A3EC"
+                border.color: username.activeFocus ? "#38BDF8" : "#4038BDF8"
                 border.width: username.activeFocus ? 1.5 : 1
                 radius: 8
                 
@@ -188,7 +188,7 @@ Column {
                     anchors.left: parent.left
                     anchors.leftMargin: 4
                     anchors.verticalCenter: parent.verticalCenter
-                    color: "#00A3EC"
+                    color: "#38BDF8"
                     radius: 1.5
                     opacity: username.activeFocus ? 1.0 : 0.0
                     Behavior on opacity { NumberAnimation { duration: 150 } }
@@ -216,7 +216,7 @@ Column {
             
             icon.height: parent.height * 0.28
             icon.width: parent.height * 0.28
-            icon.color: password.activeFocus ? "#00A3EC" : "#99FFFFFF"
+            icon.color: password.activeFocus ? "#38BDF8" : "#99FFFFFF"
             icon.source: checked ? Qt.resolvedUrl("../Assets/Password.svg") : Qt.resolvedUrl("../Assets/Password2.svg")
             checkable: true
             checked: false
@@ -251,9 +251,9 @@ Column {
             selectByMouse: true
             
             background: Rectangle {
-                color: password.activeFocus ? "#1400A3EC" : (config.PasswordFieldBackgroundColor || "#1E293B")
+                color: password.activeFocus ? "#1438BDF8" : (config.PasswordFieldBackgroundColor || "#1E293B")
                 opacity: password.activeFocus ? 0.95 : 0.65
-                border.color: password.activeFocus ? "#00A3EC" : "#4000A3EC"
+                border.color: password.activeFocus ? "#38BDF8" : "#4038BDF8"
                 border.width: password.activeFocus ? 1.5 : 1
                 radius: 8
                 
@@ -267,7 +267,7 @@ Column {
                     anchors.left: parent.left
                     anchors.leftMargin: 4
                     anchors.verticalCenter: parent.verticalCenter
-                    color: "#00A3EC"
+                    color: "#38BDF8"
                     radius: 1.5
                     opacity: password.activeFocus ? 1.0 : 0.0
                     Behavior on opacity { NumberAnimation { duration: 150 } }
@@ -311,8 +311,8 @@ Column {
 
             background: Rectangle {
                 id: buttonBackground
-                color: parent.enabled ? (parent.hovered ? "#00B4FF" : "#00A3EC") : "#0DFFFFFF"
-                border.color: parent.enabled ? "#00A3EC" : "#1AFFFFFF"
+                color: parent.enabled ? (parent.hovered ? "#00B4FF" : "#38BDF8") : "#0DFFFFFF"
+                border.color: parent.enabled ? "#38BDF8" : "#1AFFFFFF"
                 border.width: 1
                 radius: 8
                 

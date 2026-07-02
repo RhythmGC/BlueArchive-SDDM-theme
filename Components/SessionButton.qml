@@ -50,7 +50,7 @@ Item {
             }
             
             background: Rectangle {
-                color: selectSession.highlightedIndex === index ? "#00A3EC" : "transparent"
+                color: selectSession.highlightedIndex === index ? "#38BDF8" : "transparent"
                 radius: 4
             }
         }
@@ -69,7 +69,7 @@ Item {
                 context.lineTo(width, 0);
                 context.lineTo(width / 2, height);
                 context.closePath();
-                context.fillStyle = selectSession.hovered ? "#00A3EC" : (config.SessionButtonTextColor || "#81C7F5");
+                context.fillStyle = selectSession.hovered ? "#38BDF8" : (config.SessionButtonTextColor || "#81C7F5");
                 context.fill();
             }
 
@@ -94,8 +94,8 @@ Item {
         }
 
         background: Rectangle {
-            color: selectSession.hovered ? "#1400A3EC" : "#08FFFFFF"
-            border.color: selectSession.hovered ? "#00A3EC" : "#1AFFFFFF"
+            color: selectSession.hovered ? "#1438BDF8" : "#08FFFFFF"
+            border.color: selectSession.hovered ? "#38BDF8" : "#1AFFFFFF"
             border.width: 1
             radius: 8
             
@@ -122,7 +122,7 @@ Item {
             background: Rectangle {
                 radius: 8
                 color: "#1E293B"
-                border.color: "#6600A3EC"
+                border.color: "#6638BDF8"
                 border.width: 1
             }
 

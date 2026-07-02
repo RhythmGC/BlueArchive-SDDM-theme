@@ -45,8 +45,8 @@ Item {
         }
 
         background: Rectangle {
-            color: virtualKeyboardButton.hovered ? "#1400A3EC" : "#08FFFFFF"
-            border.color: virtualKeyboardButton.hovered ? "#00A3EC" : "#1AFFFFFF"
+            color: virtualKeyboardButton.hovered ? "#1438BDF8" : "#08FFFFFF"
+            border.color: virtualKeyboardButton.hovered ? "#38BDF8" : "#1AFFFFFF"
             border.width: 1
             radius: 8
             
