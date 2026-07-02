@@ -211,10 +211,10 @@ download_media() {
     
     local dst="$THEMES_DIR/$THEME_NAME"
     if [[ -d "$dst" ]]; then
-        sudo cp "$conf_file" "$dst/Themes/" 2>/dev/null || true
+        sudo cp "$conf_file" "$dst/Themes/"
         sudo mkdir -p "$dst/Backgrounds/videos" "$dst/Backgrounds/images"
-        [[ -f "$vid_dir/${theme}.mp4" ]] && sudo cp "$vid_dir/${theme}.mp4" "$dst/Backgrounds/videos/" 2>/dev/null || true
-        [[ -f "$img_dir/${theme}.jpg" ]] && sudo cp "$img_dir/${theme}.jpg" "$dst/Backgrounds/images/" 2>/dev/null || true
+        [[ -f "$vid_dir/${theme}.mp4" ]] && sudo cp "$vid_dir/${theme}.mp4" "$dst/Backgrounds/videos/"
+        [[ -f "$img_dir/${theme}.jpg" ]] && sudo cp "$img_dir/${theme}.jpg" "$dst/Backgrounds/images/"
     fi
 }
 
