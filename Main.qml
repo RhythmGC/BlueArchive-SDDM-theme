@@ -19,6 +19,7 @@ MouseArea {
     property bool keyboardOpen: false
     property bool sessionPopupOpen: false
     property string currentView: "clock"
+    onCurrentViewChanged: { if (currentView === "clock") root.forceActiveFocus() }
     property bool showLoginView: currentView === "login"
 
     // User/session data — Qt.DisplayRole is undefined in sddm-greeter;
