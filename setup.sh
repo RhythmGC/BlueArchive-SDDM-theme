@@ -121,17 +121,72 @@ install_deps() {
     info "Dependencies installed"
 }
 
+# Apply color preset based on selected variant
+apply_color_preset() {
+    local variant="${1:-}"
+    local conf="$SCRIPT_DIR/theme.conf"
+    
+    if [[ ! -f "$conf" ]]; then
+        return 0
+    fi
+    
+    local primary="" onPrimary="" surface="" surfaceContainer="" onSurface="" onSurfaceVariant="" bg="" error=""
+    
+    case "$variant" in
+        yuuka_hayase)
+            primary="#b4d8ff"
+            onPrimary="#242455"
+            surface="#1b1c32"
+            surfaceContainer="#242455"
+            onSurface="#b4d8ff"
+            onSurfaceVariant="#8faadc"
+            bg="#121226"
+            error="#ff5e85"
+            ;;
+        bluearchiveOS)
+            primary="#38BDF8"
+            onPrimary="#121625"
+            surface="#1e293b"
+            surfaceContainer="#121625"
+            onSurface="#ffffff"
+            onSurfaceVariant="#81C7F5"
+            bg="#121625"
+            error="#FF5E85"
+            ;;
+        *)
+            # Catppuccin Mocha defaults
+            primary="#cba6f7"
+            onPrimary="#1e1e2e"
+            surface="#1e1e2e"
+            surfaceContainer="#181825"
+            onSurface="#cdd6f4"
+            onSurfaceVariant="#9399b2"
+            bg="#1e1e2e"
+            error="#f38ba8"
+            ;;
+    esac
+    
+    # Use sed to replace keys in theme.conf
+    sed -i "s|^primaryColor=.*|primaryColor=$primary|" "$conf"
+    sed -i "s|^onPrimaryColor=.*|onPrimaryColor=$onPrimary|" "$conf"
+    sed -i "s|^surfaceColor=.*|surfaceColor=$surface|" "$conf"
+    sed -i "s|^surfaceContainerColor=.*|surfaceContainerColor=$surfaceContainer|" "$conf"
+    sed -i "s|^onSurfaceColor=.*|onSurfaceColor=$onSurface|" "$conf"
+    sed -i "s|^onSurfaceVariantColor=.*|onSurfaceVariantColor=$onSurfaceVariant|" "$conf"
+    sed -i "s|^backgroundColor=.*|backgroundColor=$bg|" "$conf"
+    sed -i "s|^errorColor=.*|errorColor=$error|" "$conf"
+}
+
 # Download media
 download_media() {
-    local theme="${1:-}"
-    if [[ -z "$theme" ]]; then
-        theme=$(choose "${THEMES[@]}" || echo "yuuka_hayase")
+    local theme_media="${1:-}"
+    
+    if [[ -z "$theme_media" ]]; then
+        info "Choose a theme media variant to download:"
+        theme_media=$(choose "${THEMES[@]}" || echo "yuuka_hayase")
     fi
     
     local json_file="$SCRIPT_DIR/source.json"
-    local bg_dir="$SCRIPT_DIR/Backgrounds"
-    local img_dir="$bg_dir/images"
-    local vid_dir="$bg_dir/videos"
     
     if [[ ! -f "$json_file" ]]; then
         warn "source.json not found, skipping media download."
@@ -141,113 +196,77 @@ download_media() {
     command -v jq &>/dev/null || { error "jq not installed. Please run Install Dependencies first."; return 1; }
     command -v curl &>/dev/null || { error "curl not installed. Please run Install Dependencies first."; return 1; }
     
-    mkdir -p "$img_dir" "$vid_dir"
-    info "Downloading media for $theme..."
+    local assets_dir="$SCRIPT_DIR/assets"
+    mkdir -p "$assets_dir"
     
-    local video_url=$(jq -r ".\"$theme\".video // empty" "$json_file")
-    local image_url=$(jq -r ".\"$theme\".image // empty" "$json_file")
-    
-    local conf_file="$SCRIPT_DIR/Themes/${theme}.conf"
-    
-    # Ensure conf file exists by copying yuuka_hayase.conf if necessary
-    if [[ ! -f "$conf_file" && -f "$SCRIPT_DIR/Themes/yuuka_hayase.conf" ]]; then
-        cp "$SCRIPT_DIR/Themes/yuuka_hayase.conf" "$conf_file"
-    fi
-
-    # Clean up old downloaded files for this theme to prevent conflicts or stale cache
-    rm -f "$vid_dir/${theme}.mp4" "$img_dir/${theme}.jpg"
-    local dst="$THEMES_DIR/$THEME_NAME"
-    if [[ -d "$dst" ]]; then
-        sudo rm -f "$dst/Backgrounds/videos/${theme}.mp4" 2>/dev/null || true
-        sudo rm -f "$dst/Backgrounds/images/${theme}.jpg" 2>/dev/null || true
-    fi
-
-    # If the video URL is actually a static image file, treat it as image only
-    local is_video_static=false
-    if [[ "$video_url" =~ \.(jpg|jpeg|png|webp|gif)$ ]]; then
-        is_video_static=true
-        if [[ -z "$image_url" ]]; then
-            image_url="$video_url"
-        fi
-        video_url=""
-    fi
-
-    if [[ -n "$video_url" ]]; then
-        local video_file="$vid_dir/${theme}.mp4"
-        if [[ ! -f "$video_file" ]]; then
-            local extra_opts=()
-            if [[ "$video_url" == *"pximg.net"* ]]; then
-                extra_opts=(-H "Referer: https://www.pixiv.net/")
-            fi
-            spin "Downloading video for $theme..." curl -L -f -s "${extra_opts[@]}" "$video_url" -o "$video_file"
-        fi
-        if [[ -f "$conf_file" ]]; then
-            sed -i "s|^Background=.*|Background=\"Backgrounds/videos/${theme}.mp4\"|" "$conf_file"
-        fi
-    else
-        # If no video is present, disable video background in config
-        if [[ -f "$conf_file" ]]; then
-            sed -i "s|^Background=.*|Background=\"Backgrounds/images/${theme}.jpg\"|" "$conf_file"
-        fi
-    fi
+    info "Downloading media for $theme_media..."
+    local image_url=$(jq -r ".\"$theme_media\".image // empty" "$json_file")
     
     if [[ -n "$image_url" ]]; then
-        local image_file="$img_dir/${theme}.jpg"
-        if [[ ! -f "$image_file" ]]; then
-            local extra_opts=()
-            if [[ "$image_url" == *"pximg.net"* ]]; then
-                extra_opts=(-H "Referer: https://www.pixiv.net/")
-            fi
-            spin "Downloading image for $theme..." curl -L -f -s "${extra_opts[@]}" "$image_url" -o "$image_file"
+        local image_file="$assets_dir/background.png"
+        rm -f "$image_file"
+        
+        local extra_opts=()
+        if [[ "$image_url" == *"pximg.net"* ]]; then
+            extra_opts=(-H "Referer: https://www.pixiv.net/")
         fi
-        if [[ -f "$conf_file" ]]; then
-            sed -i "s|^BackgroundPlaceholder=.*|BackgroundPlaceholder=\"Backgrounds/images/${theme}.jpg\"|" "$conf_file"
-        fi
+        spin "Downloading image for $theme_media..." curl -L -f -s "${extra_opts[@]}" "$image_url" -o "$image_file"
+        
+        # Apply the matching color preset
+        apply_color_preset "$theme_media"
+    else
+        error "No image URL found for $theme_media in source.json"
+        return 1
     fi
-    info "Media downloaded and config updated for $theme."
     
+    info "Media downloaded and color preset applied for $theme_media."
+    
+    # Sync to system path if theme is installed
     local dst="$THEMES_DIR/$THEME_NAME"
     if [[ -d "$dst" ]]; then
-        sudo cp "$conf_file" "$dst/Themes/"
-        sudo mkdir -p "$dst/Backgrounds/videos" "$dst/Backgrounds/images"
-        [[ -f "$vid_dir/${theme}.mp4" ]] && sudo cp "$vid_dir/${theme}.mp4" "$dst/Backgrounds/videos/"
-        [[ -f "$img_dir/${theme}.jpg" ]] && sudo cp "$img_dir/${theme}.jpg" "$dst/Backgrounds/images/"
+        sudo mkdir -p "$dst/assets"
+        sudo cp "$image_file" "$dst/assets/background.png"
+        sudo cp "$SCRIPT_DIR/theme.conf" "$dst/theme.conf"
+        info "Synced changes to system directory: $dst"
     fi
 }
 
-# Install theme (with theme selection built-in)
+# Install theme
 install_theme() {
     local src="$SCRIPT_DIR"
     local dst="$THEMES_DIR/$THEME_NAME"
 
     [[ ! -d "$src" ]] && { error "Run this script from the theme directory"; return 1; }
 
-    # --- Pick theme variant BEFORE installing ---
-    info "Choose a theme variant to install:"
-    local selected_theme=$(choose "${THEMES[@]}" || echo "yuuka_hayase")
+    # --- Pick variant BEFORE installing ---
+    info "Choose a theme variant to use (background and colors):"
+    local selected_media=$(choose "${THEMES[@]}" || echo "yuuka_hayase")
 
-    # Backup and copy
+    # Download media and apply color preset locally first
+    download_media "$selected_media"
+
+    # Backup existing installation if present
     [[ -d "$dst" ]] && sudo mv "$dst" "${dst}_$DATE"
     sudo mkdir -p "$dst"
+    
+    # Copy all files to installation destination
     spin "Installing theme files..." sudo cp -r "$src"/* "$dst"/
 
-    # Install fonts
-    [[ -d "$dst/Fonts" ]] && spin "Installing fonts..." sudo cp -r "$dst/Fonts"/* /usr/share/fonts/
+    # Install fonts to system fonts folder (using lowercase fonts/)
+    if [[ -d "$dst/fonts" ]]; then
+        spin "Installing fonts..." sudo cp -r "$dst/fonts"/* /usr/share/fonts/
+    fi
 
-    # Configure SDDM
+    # Configure SDDM Current Theme
     echo "[Theme]
-    Current=$THEME_NAME" | sudo tee /etc/sddm.conf > /dev/null
+Current=$THEME_NAME" | sudo tee /etc/sddm.conf > /dev/null
 
     sudo mkdir -p /etc/sddm.conf.d
     echo "[General]
-    InputMethod=qtvirtualkeyboard" | sudo tee /etc/sddm.conf.d/virtualkbd.conf > /dev/null
+InputMethod=qtvirtualkeyboard" | sudo tee /etc/sddm.conf.d/virtualkbd.conf > /dev/null
 
-    info "Theme installed"
-
-    # Download media and set selected theme
-    download_media "$selected_theme"
-    sudo sed -i "s|^ConfigFile=.*|ConfigFile=Themes/${selected_theme}.conf|" "$METADATA"
-    info "Active theme set to: $selected_theme"
+    info "Theme installed successfully ✅"
+    info "Active variant set to: $selected_media"
 }
 
 # Update theme files only (no backup, no reinstall — just sync changes)
@@ -258,14 +277,18 @@ update_theme() {
     [[ ! -d "$dst" ]] && { error "Theme not installed yet. Please run Install Theme first."; return 1; }
 
     spin "Updating theme files..." sudo cp -r "$src"/* "$dst"/
+    
+    # Install fonts if updated
+    if [[ -d "$dst/fonts" ]]; then
+        sudo cp -r "$dst/fonts"/* /usr/share/fonts/
+    fi
+    
     info "Theme files updated ✅"
 
-    # Ask if user wants to switch theme variant too
-    if confirm "Switch theme variant as well?"; then
-        local selected_theme=$(choose "${THEMES[@]}" || echo "yuuka_hayase")
-        download_media "$selected_theme"
-        sudo sed -i "s|^ConfigFile=.*|ConfigFile=Themes/${selected_theme}.conf|" "$METADATA"
-        info "Active theme set to: $selected_theme"
+    if confirm "Switch media variant as well?"; then
+        info "Choose a theme variant to use:"
+        local selected_media=$(choose "${THEMES[@]}" || echo "yuuka_hayase")
+        download_media "$selected_media"
     fi
 }
 
@@ -273,22 +296,10 @@ update_theme() {
 select_theme() {
     [[ ! -f "$METADATA" ]] && { error "Install theme first"; return 1; }
     
-    local theme=$(choose "${THEMES[@]}" || echo "yuuka_hayase")
+    info "Choose a theme variant to use:"
+    local selected_media=$(choose "${THEMES[@]}" || echo "yuuka_hayase")
     
-    download_media "$theme"
-    
-    sudo sed -i "s|^ConfigFile=.*|ConfigFile=Themes/${theme}.conf|" "$METADATA"
-    info "Selected theme: $theme"
-}
-
-# Enable SDDM
-enable_sddm() {
-    command -v systemctl &>/dev/null || { error "systemctl not found"; return 1; }
-
-    sudo systemctl disable display-manager.service 2>/dev/null || true
-    sudo systemctl enable sddm.service
-    info "SDDM enabled"
-    warn "Reboot required"
+    download_media "$selected_media"
 }
 
 preview_theme(){
@@ -309,9 +320,6 @@ preview_theme(){
         kill "$greeter_pid"
     fi
 
-
-    local theme="$(sed -n 's|^ConfigFile=Themes/\(.*\)\.conf|\1|p' $METADATA)"
-    info "Preview closed ($theme theme found)." 
     info "Log file: $log_file"
 }
 

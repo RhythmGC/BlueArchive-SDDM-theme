@@ -1,15 +1,11 @@
 [SddmGreeterTheme]
 Name=BlueArchive-SDDM-theme
-Description=BlueArchive-SDDM-theme
+Description=Blue Archive SDDM theme
 Author=RhythmGC
-Website=https://github.com/RhythmGC/BlueArchive-SDDM-theme
-License=GPL-3.0-or-later
 Type=sddm-theme
 Version=1.3
-ConfigFile=Themes/yuuka_hayase.conf
-Screenshot=Previews/preview.png
 MainScript=Main.qml
-TranslationsDirectory=translations
+ConfigFile=theme.conf
 Theme-Id=BlueArchive-SDDM-theme
 Theme-API=2.0
 QtVersion=6
