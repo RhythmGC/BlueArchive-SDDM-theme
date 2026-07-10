@@ -24,16 +24,22 @@ MouseArea {
 
     // User/session data — Qt.DisplayRole is undefined in sddm-greeter;
     // use explicit SDDM role numbers (verified via diagnostic dump):
-    //   UserModel:    NameRole = UserRole+1, RealNameRole = UserRole+2
+    //   UserModel:    NameRole = UserRole+1, RealNameRole = UserRole+2, IconRole = UserRole+4
     //   SessionModel: NameRole = UserRole+4
     readonly property int _nameRole:     Qt.UserRole + 1
     readonly property int _realNameRole: Qt.UserRole + 2
+    readonly property int _iconRole:     Qt.UserRole + 4   // user avatar icon path
     readonly property int _sessNameRole: Qt.UserRole + 4   // session display name
 
     readonly property string currentUserLogin: {
         if (userModel.count <= 0) return userModel.lastUser || ""
         var v = userModel.data(userModel.index(root.currentUserIndex, 0), root._nameRole)
         return (v !== undefined && v !== null) ? String(v) : (userModel.lastUser || "")
+    }
+    readonly property string currentUserIcon: {
+        if (userModel.count <= 0) return ""
+        var v = userModel.data(userModel.index(root.currentUserIndex, 0), root._iconRole)
+        return (v !== undefined && v !== null) ? String(v) : ""
     }
     readonly property string currentUserName: {
         if (userModel.count <= 0) return root.currentUserLogin
@@ -71,10 +77,12 @@ MouseArea {
     }
 
     // Avatar paths — dynamic based on selected user
-    readonly property string _avatarPath0: root.currentUserLogin ? "/home/" + root.currentUserLogin + "/.face" : ""
+    readonly property string _avatarPath0: root.currentUserIcon
     readonly property string _avatarPath1: root.currentUserLogin ? "/var/lib/AccountsService/icons/" + root.currentUserLogin : ""
-    readonly property string _avatarPath2: Qt.resolvedUrl("assets/user-face.png")
-    readonly property string _avatarPath3: ""
+    readonly property string _avatarPath2: root.currentUserLogin ? "/usr/share/sddm/faces/" + root.currentUserLogin + ".face.icon" : ""
+    readonly property string _avatarPath3: root.currentUserLogin ? "/home/" + root.currentUserLogin + "/.face.icon" : ""
+    readonly property string _avatarPath4: root.currentUserLogin ? "/home/" + root.currentUserLogin + "/.face" : ""
+    readonly property string _avatarPath5: Qt.resolvedUrl("Assets/User.svg")
 
     function switchToLogin(captureChar) {
         root.currentView = "login"
@@ -277,12 +285,30 @@ MouseArea {
                             ? root.makeFileUrl(root._avatarPath3) : ""
                         visible: false
                     }
+                    Image {
+                        id: avatarImg4
+                        anchors.fill: parent; fillMode: Image.PreserveAspectCrop
+                        asynchronous: true; cache: true; smooth: true; mipmap: true
+                        sourceSize.width: 200; sourceSize.height: 200
+                        source: avatarImg0.status !== Image.Ready && avatarImg1.status !== Image.Ready && avatarImg2.status !== Image.Ready && avatarImg3.status !== Image.Ready
+                            ? root.makeFileUrl(root._avatarPath4) : ""
+                        visible: false
+                    }
+                    Image {
+                        id: avatarImg5
+                        anchors.fill: parent; fillMode: Image.PreserveAspectCrop
+                        asynchronous: true; cache: true; smooth: true; mipmap: true
+                        sourceSize.width: 200; sourceSize.height: 200
+                        source: avatarImg0.status !== Image.Ready && avatarImg1.status !== Image.Ready && avatarImg2.status !== Image.Ready && avatarImg3.status !== Image.Ready && avatarImg4.status !== Image.Ready
+                            ? root.makeFileUrl(root._avatarPath5) : ""
+                        visible: false
+                    }
 
                     // Circular mask for avatar - Qt5 compatible
                     Item {
                         id: avatarMasked
                         anchors.fill: parent
-                        visible: avatarImg0.status === Image.Ready || avatarImg1.status === Image.Ready || avatarImg2.status === Image.Ready || avatarImg3.status === Image.Ready
+                        visible: avatarImg0.status === Image.Ready || avatarImg1.status === Image.Ready || avatarImg2.status === Image.Ready || avatarImg3.status === Image.Ready || avatarImg4.status === Image.Ready || avatarImg5.status === Image.Ready
                         layer.enabled: true
                         layer.effect: OpacityMask {
                             maskSource: Rectangle { width: avatarCircle.width; height: avatarCircle.height; radius: width / 2 }
@@ -292,7 +318,9 @@ MouseArea {
                             source: avatarImg0.status === Image.Ready ? avatarImg0.source
                                   : avatarImg1.status === Image.Ready ? avatarImg1.source
                                   : avatarImg2.status === Image.Ready ? avatarImg2.source
-                                  : avatarImg3.source
+                                  : avatarImg3.status === Image.Ready ? avatarImg3.source
+                                  : avatarImg4.status === Image.Ready ? avatarImg4.source
+                                  : avatarImg5.source
                             asynchronous: true; cache: true; smooth: true; mipmap: true
                             sourceSize.width: 200; sourceSize.height: 200
                         }

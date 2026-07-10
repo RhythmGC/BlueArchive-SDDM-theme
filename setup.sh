@@ -265,8 +265,37 @@ Current=$THEME_NAME" | sudo tee /etc/sddm.conf > /dev/null
     echo "[General]
 InputMethod=qtvirtualkeyboard" | sudo tee /etc/sddm.conf.d/virtualkbd.conf > /dev/null
 
+    setup_user_avatar
+
     info "Theme installed successfully ✅"
     info "Active variant set to: $selected_media"
+}
+
+# Setup user avatar for SDDM
+setup_user_avatar() {
+    local username="${SUDO_USER:-$USER}"
+    local face_file=""
+    
+    if [[ -f "/home/$username/.face.icon" ]]; then
+        face_file="/home/$username/.face.icon"
+    elif [[ -f "/home/$username/.face" ]]; then
+        face_file="/home/$username/.face"
+    fi
+
+    if [[ -n "$face_file" ]]; then
+        spin "Setting up user avatar for SDDM..." sudo mkdir -p /usr/share/sddm/faces
+        sudo cp "$face_file" "/usr/share/sddm/faces/$username.face.icon"
+        sudo chmod 644 "/usr/share/sddm/faces/$username.face.icon"
+        info "User avatar configured successfully ✅"
+    else
+        warn "No ~/.face or ~/.face.icon found in /home/$username/"
+    fi
+}
+
+# Enable SDDM Service
+enable_sddm() {
+    spin "Enabling SDDM service..." sudo systemctl enable sddm
+    info "SDDM service enabled ✅"
 }
 
 # Update theme files only (no backup, no reinstall — just sync changes)
@@ -282,6 +311,8 @@ update_theme() {
     if [[ -d "$dst/fonts" ]]; then
         sudo cp -r "$dst/fonts"/* /usr/share/fonts/
     fi
+    
+    setup_user_avatar
     
     info "Theme files updated ✅"
 
