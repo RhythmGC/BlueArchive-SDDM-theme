@@ -1,7 +1,7 @@
 # 🔹 Blue Archive SDDM Theme
 
-![Stars](https://img.shields.io/github/stars/RhythmGC/BlueArchive-SDDM-theme?color=5d8aa8&labelColor=1b1b25&style=for-the-badge&t=1784809952)
-![Forks](https://img.shields.io/github/forks/RhythmGC/BlueArchive-SDDM-theme?color=bf616a&labelColor=1b1b25&style=for-the-badge&t=1784809952)
+![Stars](https://img.shields.io/github/stars/RhythmGC/BlueArchive-SDDM-theme?color=5d8aa8&labelColor=1b1b25&style=for-the-badge&t=1784813570)
+![Forks](https://img.shields.io/github/forks/RhythmGC/BlueArchive-SDDM-theme?color=bf616a&labelColor=1b1b25&style=for-the-badge&t=1784813570)
 
 > **Welcome back, Sensei! Access your Schale Terminal in Kivotos with style.** 
 
@@ -131,7 +131,12 @@ sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/BlueArchive-SDDM-the
 ## 🌟 Kivotos Supporters (Stargazers)
 
 <!-- stargazers_start -->
-<p align="left">No stargazers or forkers yet. Be the first!</p>
+<p align="left">
+  <a href="https://github.com/RhythmGC"><img src="https://avatars.githubusercontent.com/u/125289048?v=4" width="40" height="40" style="border-radius: 50%; margin: 3px;" alt="RhythmGC"/></a>
+  <a href="https://github.com/longvoquy"><img src="https://avatars.githubusercontent.com/u/127716758?v=4" width="40" height="40" style="border-radius: 50%; margin: 3px;" alt="longvoquy"/></a>
+  <a href="https://github.com/niyakipham"><img src="https://avatars.githubusercontent.com/u/175391259?v=4" width="40" height="40" style="border-radius: 50%; margin: 3px;" alt="niyakipham"/></a>
+  <a href="https://github.com/shuzi48"><img src="https://avatars.githubusercontent.com/u/137606442?v=4" width="40" height="40" style="border-radius: 50%; margin: 3px;" alt="shuzi48"/></a>
+</p>
 <!-- stargazers_end -->
 
 ## 🍴 Club Members (Forkers)
