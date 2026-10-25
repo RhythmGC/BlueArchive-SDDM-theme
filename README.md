@@ -1,7 +1,7 @@
 # 🔹 Blue Archive SDDM Theme
 
-![Stars](https://img.shields.io/github/stars/RhythmGC/BlueArchive-SDDM-theme?color=5d8aa8&labelColor=1b1b25&style=for-the-badge&t=1792934970)
-![Forks](https://img.shields.io/github/forks/RhythmGC/BlueArchive-SDDM-theme?color=bf616a&labelColor=1b1b25&style=for-the-badge&t=1792934970)
+![Stars](https://img.shields.io/github/stars/RhythmGC/BlueArchive-SDDM-theme?color=5d8aa8&labelColor=1b1b25&style=for-the-badge&t=1792948868)
+![Forks](https://img.shields.io/github/forks/RhythmGC/BlueArchive-SDDM-theme?color=bf616a&labelColor=1b1b25&style=for-the-badge&t=1792948868)
 
 > **Welcome back, Sensei! Access your Schale Terminal in Kivotos with style.** 
 
